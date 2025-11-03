@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview - {{ user.display_name }} - selfie.fm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            --gradient-soft: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+            --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+            --color-purple: #7C3AED;
+            --color-pink: #EC4899;
+            --color-dark: #1a1a2e;
+            --color-gray: #64748b;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            padding: 0;
+            animation: gradientShift 10s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        /* Preview Banner */
+        .preview-banner {
+            background: var(--gradient-warning);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .preview-banner-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .preview-banner-subtitle {
+            font-size: 14px;
+            margin-bottom: 16px;
+            opacity: 0.95;
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-edit {
+            background: white;
+            color: #F59E0B;
+        }
+        
+        .btn-publish {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-publish:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .profile-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 32px 16px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header Section */
+        .profile-header {
+            text-align: center;
+            padding: 48px 24px;
+            color: white;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .avatar-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--color-purple);
+            margin: 0 auto 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .avatar-circle:hover {
+            transform: scale(1.05);
+        }
+        
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: white;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-bio {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Links Card - Glass-morphism */
+        .links-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-top: 24px;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+        
+        .links-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-purple);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        
+        .link-item {
+            display: block;
+            padding: 20px;
+            margin-bottom: 12px;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+        
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient-soft);
+            transition: width 0.3s ease;
+            z-index: 0;
+        }
+        
+        .link-item:hover::before {
+            width: 100%;
+        }
+        
+        .link-item:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+        
+        .link-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .link-item > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .link-main-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+        }
+        
+        .link-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .link-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .link-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .platform-icon {
+            display: inline-flex;
+            align-items: center;
+            opacity: 0.8;
+        }
+        
+        .link-subtitle {
+            font-size: 14px;
+            color: var(--color-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .voice-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--color-purple);
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        
+        .link-url {
+            font-size: 14px;
+            color: var(--color-gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .link-arrow {
+            font-size: 24px;
+            color: var(--color-gray);
+            flex-shrink: 0;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .link-item:hover .link-arrow {
+            transform: translateX(4px);
+            color: var(--color-purple);
+        }
+        
+        .link-audio-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .link-audio-section audio {
+            width: 100%;
+            height: 32px;
+        }
+        
+        .no-links {
+            text-align: center;
+            padding: 64px 20px;
+            color: var(--color-gray);
+        }
+        
+        .no-links-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .preview-banner {
+                padding: 16px 12px;
+            }
+            
+            .preview-banner-title {
+                font-size: 20px;
+            }
+            
+            .preview-banner-subtitle {
+                font-size: 13px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .profile-container {
+                padding: 16px 12px;
+            }
+            
+            .profile-header {
+                padding: 32px 16px;
+            }
+            
+            .avatar-circle {
+                width: 96px;
+                height: 96px;
+                font-size: 40px;
+            }
+            
+            .profile-name {
+                font-size: 28px;
+            }
+            
+            .profile-bio {
+                font-size: 16px;
+            }
+            
+            .links-card {
+                padding: 28px 20px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .link-item {
+                padding: 16px;
+            }
+            
+            .link-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preview Mode Banner -->
+    <div class="preview-banner">
+        <div class="preview-banner-title">
+            <span>👀</span>
+            <span>Preview Mode</span>
+        </div>
+        <p class="preview-banner-subtitle">This is how your profile will look to visitors</p>
+        <div class="preview-actions">
+            <a href="/dashboard/{{ user.username }}" class="btn btn-edit">
+                ✏️ Edit Profile
+            </a>
+            <button onclick="publishProfile()" class="btn btn-publish" id="publishBtn">
+                ✅ Publish Profile
+            </button>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <!-- Header Section -->
+        <header class="profile-header">
+            <div class="avatar-circle">
+                {% if user.avatar_url %}
+                    <img src="{{ user.avatar_url }}" alt="{{ user.display_name }}">
+                {% else %}
+                    {{ user.display_name[0].upper() }}
+                {% endif %}
+            </div>
+            <h1 class="profile-name">{{ user.display_name }}</h1>
+            {% if user.bio %}
+                <p class="profile-bio">{{ user.bio }}</p>
+            {% endif %}
+        </header>
+
+        <!-- Links Card -->
+        <div class="links-card">
+            {% if links %}
+                <div class="links-header">Your Links</div>
+                <div class="links-container">
+                    {% for link in links %}
+                    <div class="link-item">
+                        <div class="link-main-row" onclick="window.open('{{ link.url }}', '_blank', 'noopener,noreferrer')">
+                            <div class="link-icon" style="background: {{ link.platform_color or '#667eea' }};">
+                                {{ link.platform_icon|safe if link.platform_icon else '🔗' }}
+                            </div>
+                            
+                            <div class="link-content">
+                                <div class="link-title">
+                                    <span class="platform-icon" data-platform="{{ link.platform or 'website' }}"></span>
+                                    <span>{{ link.title }}</span>
+                                </div>
+                                {% if link.voice_message_audio %}
+                                <div class="link-subtitle">
+                                    <span class="voice-indicator"></span>
+                                    🎙️ Play my message
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="link-arrow">→</div>
+                        </div>
+                        
+                        {% if link.voice_message_audio %}
+                        <div class="link-audio-section">
+                            <audio controls>
+                                <source src="/audio/{{ link.voice_message_audio }}" type="audio/mpeg">
+                            </audio>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-links">
+                    <div class="no-links-icon">🔗</div>
+                    <p>No links added yet. Add some in the dashboard!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Platform icon SVGs using Simple Icons CDN with proper brand colors
+        const platformIcons = {
+            instagram: '<img src="https://cdn.simpleicons.org/instagram" width="24" height="24" alt="Instagram" style="display:block;">',
+            facebook: '<img src="https://cdn.simpleicons.org/facebook/1877F2" width="24" height="24" alt="Facebook" style="display:block;">',
+            twitter: '<img src="https://cdn.simpleicons.org/x/000000" width="24" height="24" alt="X/Twitter" style="display:block;">',
+            linkedin: '<img src="https://cdn.simpleicons.org/linkedin/0A66C2" width="24" height="24" alt="LinkedIn" style="display:block;">',
+            youtube: '<img src="https://cdn.simpleicons.org/youtube/FF0000" width="24" height="24" alt="YouTube" style="display:block;">',
+            tiktok: '<img src="https://cdn.simpleicons.org/tiktok/000000" width="24" height="24" alt="TikTok" style="display:block;">',
+            spotify: '<img src="https://cdn.simpleicons.org/spotify/1DB954" width="24" height="24" alt="Spotify" style="display:block;">',
+            'apple-music': '<img src="https://cdn.simpleicons.org/applemusic/FA243C" width="24" height="24" alt="Apple Music" style="display:block;">',
+            soundcloud: '<img src="https://cdn.simpleicons.org/soundcloud/FF3300" width="24" height="24" alt="SoundCloud" style="display:block;">',
+            twitch: '<img src="https://cdn.simpleicons.org/twitch/9146FF" width="24" height="24" alt="Twitch" style="display:block;">',
+            github: '<img src="https://cdn.simpleicons.org/github/181717" width="24" height="24" alt="GitHub" style="display:block;">',
+            website: '<svg fill="#64748b" viewBox="0 0 24 24" width="24" height="24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>'
+        };
+        
+        // Render platform icons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.platform-icon').forEach(function(iconEl) {
+                const platform = iconEl.getAttribute('data-platform') || 'website';
+                const iconSvg = platformIcons[platform] || platformIcons.website;
+                iconEl.innerHTML = iconSvg;
+                iconEl.style.display = 'inline-flex';
+                iconEl.style.alignItems = 'center';
+            });
+        });
+        
+        async function publishProfile() {
+            const publishBtn = document.getElementById('publishBtn');
+            publishBtn.disabled = true;
+            publishBtn.textContent = '⏳ Publishing...';
+            
+            try {
+                const response = await fetch('/api/users/{{ user.username }}/publish', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to publish profile');
+                }
+                
+                // Redirect to the public profile
+                window.location.href = '/{{ user.username }}';
+            } catch (error) {
+                alert('Error: ' + error.message);
+                publishBtn.disabled = false;
+                publishBtn.textContent = '✅ Publish Profile';
+            }
+        }
+    </script>
+</body>
+</html>

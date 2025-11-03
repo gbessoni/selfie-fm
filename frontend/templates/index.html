@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>selfie.fm - Your links deserve better than a bullet point</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            --color-purple: #7C3AED;
+            --color-pink: #EC4899;
+            --color-dark: #1a1a2e;
+            --color-gray: #64748b;
+            --color-light-gray: #f1f5f9;
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #ffffff 0%, #faf5ff 100%);
+            color: var(--color-dark);
+            line-height: 1.6;
+        }
+        
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav a {
+            text-decoration: none;
+            color: var(--color-gray);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+        
+        .nav a:hover {
+            color: var(--color-purple);
+        }
+        
+        .hero {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 24px 60px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: var(--color-dark);
+        }
+        
+        .hero-subtitle {
+            font-size: 22px;
+            color: var(--color-gray);
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+        }
+        
+        .section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--color-dark);
+        }
+        
+        .section-header p {
+            font-size: 18px;
+            color: var(--color-gray);
+            line-height: 1.8;
+        }
+        
+        .problem-box {
+            background: rgba(239, 68, 68, 0.05);
+            border: 2px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-bottom: 48px;
+        }
+        
+        .problem-box h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 16px;
+        }
+        
+        .problem-box p {
+            font-size: 18px;
+            color: var(--color-gray);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+        
+        .boring-links {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 24px;
+        }
+        
+        .boring-link {
+            padding: 16px;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: var(--color-gray);
+        }
+        
+        .solution-box {
+            background: rgba(34, 197, 94, 0.05);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+        }
+        
+        .solution-box h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #16a34a;
+            margin-bottom: 16px;
+        }
+        
+        .solution-box p {
+            font-size: 18px;
+            color: var(--color-gray);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 48px;
+        }
+        
+        .step {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-dark);
+        }
+        
+        .step-content p {
+            font-size: 16px;
+            color: var(--color-gray);
+            line-height: 1.7;
+        }
+        
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+        
+        .use-case {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .use-case:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .use-case h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--color-dark);
+        }
+        
+        .use-case p {
+            font-size: 16px;
+            color: var(--color-gray);
+            line-height: 1.7;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: var(--color-gray);
+            line-height: 1.6;
+        }
+        
+        .pricing-section {
+            background: var(--color-light-gray);
+            padding: 80px 24px;
+        }
+        
+        .pricing-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .pricing-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+        
+        .plan {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .plan.featured {
+            border-color: var(--color-purple);
+            box-shadow: 0 12px 32px rgba(124, 58, 237, 0.2);
+        }
+        
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-dark);
+        }
+        
+        .plan-price {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .plan-price.free {
+            color: var(--color-gray);
+        }
+        
+        .plan-price.pro {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .plan-period {
+            font-size: 16px;
+            color: var(--color-gray);
+            margin-bottom: 32px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+        
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 16px;
+            color: var(--color-dark);
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .cta-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 24px 120px;
+            text-align: center;
+        }
+        
+        .cta-box {
+            background: var(--gradient-primary);
+            padding: 64px 48px;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 24px 48px rgba(124, 58, 237, 0.3);
+        }
+        
+        .cta-box h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .cta-box p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 32px;
+            line-height: 1.8;
+        }
+        
+        .btn-white {
+            background: white;
+            color: var(--color-purple);
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer {
+            background: var(--color-dark);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 48px 24px 24px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .section-header h2 {
+                font-size: 32px;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .use-cases,
+            .stats,
+            .pricing-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .problem-box,
+            .solution-box {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <img src="/static/images/logo.svg" alt="selfie.fm logo">
+                <span class="logo-text">selfie.fm</span>
+            </a>
+            <nav class="nav">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#pricing">Pricing</a>
+                <a href="/login">Sign In</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <h1>Your links deserve better than a bullet point.</h1>
+        <p class="hero-subtitle">We scan your business, write a sales pitch for every link, and help you record it in 10 seconds. The result? Prospects hear why they should click—in your voice—before they even visit.</p>
+        <a href="/signup" class="btn btn-primary">Get Started Free →</a>
+    </section>
+    
+    <section class="section">
+        <div class="problem-box">
+            <h3>The Problem</h3>
+            <p>You're sending traffic to a page full of links. No context. No urgency. No personality.</p>
+            <p>Your Instagram followers, newsletter subscribers, and podcast listeners land on your Linktree and see:</p>
+            <div class="boring-links">
+                <div class="boring-link">📧 Newsletter</div>
+                <div class="boring-link">🎥 YouTube</div>
+                <div class="boring-link">🛍️ Shop</div>
+            </div>
+            <p style="margin-top: 24px; font-weight: 600; color: #dc2626;">They think: "Okay... which one?"<br>You lose 80% of them.</p>
+        </div>
+        
+        <div class="solution-box">
+            <h3>The Solution</h3>
+            <p><strong>Selfie.fm scans your business and writes the pitch for you.</strong></p>
+            <p>Import your links. Our AI reads your website, socials, and products. Then we draft a 10-second sales script for each link.</p>
+            <p>You record it (or we generate it with AI voice). Now every link has a reason to click.</p>
+        </div>
+    </section>
+    
+    <section class="section" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+        </div>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Import</h4>
+                    <p>Paste your Linktree URL or add links manually</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>AI Scans</h4>
+                    <p>We read your site, socials, and copy to understand your business</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>AI Writes</h4>
+                    <p>For each link, we draft a 10-second pitch with pain point + social proof + CTA</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>You Record</h4>
+                    <p>Read our script or use AI voice. Preview, edit, approve.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>Your Links Sell</h4>
+                    <p>Every visitor hears your pitch before clicking. CTR increases 2.7x.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="section-header">
+            <h2>Why This Works</h2>
+        </div>
+        
+        <div class="use-cases">
+            <div class="use-case">
+                <h4>Coaches</h4>
+                <p>AI writes your bootcamp pitch with urgency and social proof</p>
+            </div>
+            
+            <div class="use-case">
+                <h4>Course Creators</h4>
+                <p>AI highlights your teaching style and student results</p>
+            </div>
+            
+            <div class="use-case">
+                <h4>Freelancers</h4>
+                <p>AI positions your service as the solution to their pain</p>
+            </div>
+            
+            <div class="use-case">
+                <h4>Product Sellers</h4>
+                <p>AI uses scarcity, benefits, and reviews to convert</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="section-header">
+            <h2>The Data</h2>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">81%</div>
+                <div class="stat-label">of visitors play the voice intro</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-value">2.7x</div>
+                <div class="stat-label">higher click-through rate vs. text-only</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-value">22%</div>
+                <div class="stat-label">lift in conversions for coaching/courses</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-container">
+            <div class="section-header">
+                <h2>Pricing</h2>
+            </div>
+            
+            <div class="pricing-plans">
+                <div class="plan">
+                    <div class="plan-name">Free</div>
+                    <div class="plan-price free">$0</div>
+                    <div class="plan-period">Forever</div>
+                    <ul class="plan-features">
+                        <li>1 voice message</li>
+                        <li>Basic analytics</li>
+                        <li>Unlimited links</li>
+                        <li>Import from Linktree</li>
+                    </ul>
+                    <a href="/signup" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+                </div>
+                
+                <div class="plan featured">
+                    <div class="plan-name">Pro</div>
+                    <div class="plan-price pro">$6.99</div>
+                    <div class="plan-period">per month</div>
+                    <ul class="plan-features">
+                        <li>Unlimited voice intros</li>
+                        <li>AI-generated scripts</li>
+                        <li>Advanced analytics</li>
+                        <li>Custom branding</li>
+                        <li>Email capture</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="/signup" class="btn btn-primary" style="width: 100%; text-align: center;">Start Pro Trial</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to make your links sell?</h2>
+            <p>Join creators who are turning followers into customers with AI-powered voice pitches.</p>
+            <a href="/signup" class="btn btn-white">Get Started Free →</a>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="footer-logo">selfie.fm</div>
+        <div class="footer-links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="/login">Sign In</a>
+            <a href="/signup">Get Started</a>
+        </div>
+        <p>© 2025 selfie.fm. AI-powered voice pitches for your links.</p>
+    </footer>
+</body>
+</html>

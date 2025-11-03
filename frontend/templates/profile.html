@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.display_name }} - selfie.fm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            --gradient-soft: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+            --color-purple: #7C3AED;
+            --color-pink: #EC4899;
+            --color-dark: #1a1a2e;
+            --color-gray: #64748b;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            padding: 32px 16px;
+            animation: gradientShift 10s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .profile-container {
+            max-width: 680px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header Section */
+        .profile-header {
+            text-align: center;
+            padding: 48px 24px;
+            color: white;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .avatar-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--color-purple);
+            margin: 0 auto 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .avatar-circle:hover {
+            transform: scale(1.05);
+        }
+        
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: white;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-bio {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Welcome Audio Player - Custom Button */
+        .welcome-audio-container {
+            margin: 32px 0;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+        
+        .welcome-audio-player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .custom-play-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .custom-play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(124, 58, 237, 0.7), 0 0 40px rgba(236, 72, 153, 0.5);
+        }
+        
+        .custom-play-button::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            opacity: 0.3;
+            animation: pulseGlow 2s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .custom-play-button .play-icon {
+            color: white;
+            font-size: 22px;
+            margin-left: 3px;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-play-button.playing .play-icon {
+            font-size: 20px;
+            margin-left: 0;
+        }
+        
+        .audio-label {
+            font-size: 14px;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .audio-duration {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+        
+        /* Waveform Animation */
+        .waveform-container {
+            display: none;
+            align-items: center;
+            gap: 3px;
+            height: 24px;
+            margin-top: 4px;
+        }
+        
+        .waveform-container.active {
+            display: flex;
+        }
+        
+        .waveform-bar {
+            width: 3px;
+            background: linear-gradient(180deg, #7C3AED 0%, #EC4899 100%);
+            border-radius: 2px;
+            animation: waveform 1s ease-in-out infinite;
+        }
+        
+        .waveform-bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .waveform-bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        
+        .waveform-bar:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        
+        .waveform-bar:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+        
+        .waveform-bar:nth-child(5) {
+            animation-delay: 0.05s;
+        }
+        
+        @keyframes waveform {
+            0%, 100% {
+                height: 8px;
+            }
+            50% {
+                height: 20px;
+            }
+        }
+        
+        /* Links Card - Glass-morphism */
+        .links-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-top: 24px;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+        
+        .links-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-purple);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+        
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient-soft);
+            transition: width 0.3s ease;
+            z-index: 0;
+        }
+        
+        .link-item:hover::before {
+            width: 100%;
+        }
+        
+        .link-item:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+        
+        .link-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .link-item > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Play Button with Pulse Animation */
+        .play-button {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+        }
+        
+        .play-button::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0;
+            }
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 24px rgba(124, 58, 237, 0.5);
+        }
+        
+        .play-button::after {
+            content: '▶';
+            color: white;
+            font-size: 18px;
+            margin-left: 3px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .play-button.playing::after {
+            content: '⏸';
+            margin-left: 0;
+        }
+        
+        .play-button.no-audio {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .play-button.no-audio::before {
+            animation: none;
+        }
+        
+        .play-button.no-audio:hover {
+            transform: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+        }
+        
+        /* Link Content */
+        .link-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .link-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .platform-icon {
+            display: inline-flex;
+            align-items: center;
+            opacity: 0.8;
+        }
+        
+        .link-subtitle {
+            font-size: 14px;
+            color: var(--color-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .voice-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--color-purple);
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        
+        /* Arrow */
+        .link-arrow {
+            font-size: 24px;
+            color: var(--color-gray);
+            flex-shrink: 0;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .link-item:hover .link-arrow {
+            transform: translateX(4px);
+            color: var(--color-purple);
+        }
+        
+        /* No Links State */
+        .no-links {
+            text-align: center;
+            padding: 64px 20px;
+            color: var(--color-gray);
+        }
+        
+        .no-links-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* Footer */
+        .profile-footer {
+            text-align: center;
+            padding: 40px 24px;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+        
+        .profile-footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-footer a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .footer-logo {
+            height: 28px;
+            width: auto;
+            vertical-align: middle;
+        }
+        
+        /* Hidden audio element */
+        .hidden-audio {
+            display: none;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px 12px;
+            }
+            
+            .profile-header {
+                padding: 32px 16px;
+            }
+            
+            .avatar-circle {
+                width: 96px;
+                height: 96px;
+                font-size: 40px;
+            }
+            
+            .profile-name {
+                font-size: 28px;
+            }
+            
+            .profile-bio {
+                font-size: 16px;
+            }
+            
+            .links-card {
+                padding: 28px 20px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .link-item {
+                padding: 16px;
+            }
+            
+            .play-button {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .play-button::after {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Header Section -->
+        <header class="profile-header">
+            <div class="avatar-circle">
+                {% if user.avatar_url %}
+                    <img src="{{ user.avatar_url }}" alt="{{ user.display_name }}">
+                {% else %}
+                    {{ user.display_name[0].upper() }}
+                {% endif %}
+            </div>
+            <h1 class="profile-name">{{ user.display_name }}</h1>
+            {% if user.bio %}
+                <p class="profile-bio">{{ user.bio }}</p>
+            {% endif %}
+            
+            {% if user.welcome_message_audio %}
+            <div class="welcome-audio-container">
+                <div class="welcome-audio-player">
+                    <div class="custom-play-button" id="welcomePlayBtn" onclick="toggleWelcomeAudio()">
+                        <span class="play-icon">▶️</span>
+                    </div>
+                    <div class="audio-label">
+                        🎙️ Hear my voice <span class="audio-duration" id="welcomeDuration">0:14</span>
+                    </div>
+                    <div class="waveform-container" id="welcomeWaveform">
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                    </div>
+                    <audio class="hidden-audio" id="welcomeAudio">
+                        <source src="/audio/{{ user.welcome_message_audio }}" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+            {% endif %}
+        </header>
+
+        <!-- Links Card -->
+        <div class="links-card">
+            {% if links %}
+                <div class="links-header">Your Links</div>
+                <div class="links-container">
+                    {% for link in links %}
+                    <div class="link-item" onclick="openLink(event, '{{ link.url }}', {{ link.id }})">
+                        <div class="play-button {% if not link.voice_message_audio %}no-audio{% endif %}" 
+                             onclick="toggleAudio(event, {{ link.id }})" 
+                             id="playBtn{{ link.id }}">
+                        </div>
+                        
+                        {% if link.voice_message_audio %}
+                        <audio class="hidden-audio" id="audio{{ link.id }}">
+                            <source src="/audio/{{ link.voice_message_audio }}" type="audio/mpeg">
+                        </audio>
+                        {% endif %}
+                        
+                        <div class="link-content">
+                            <div class="link-title">
+                                <span class="platform-icon" data-platform="{{ link.platform or 'website' }}"></span>
+                                <span>{{ link.title }}</span>
+                            </div>
+                            {% if link.voice_message_audio %}
+                                <div class="link-subtitle">
+                                    <span class="voice-indicator"></span>
+                                    🎙️ Play my message
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="link-arrow">→</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-links">
+                    <div class="no-links-icon">🔗</div>
+                    <p>No links added yet.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="profile-footer">
+            <a href="/">
+                <img src="/static/images/logo.svg" alt="selfie.fm" class="footer-logo">
+                <span>Create your own selfie.fm</span>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        let currentAudio = null;
+        let currentPlayBtn = null;
+        const username = "{{ user.username }}";
+        
+        // Platform icon SVGs using Simple Icons CDN with proper brand colors
+        const platformIcons = {
+            instagram: '<img src="https://cdn.simpleicons.org/instagram" width="24" height="24" alt="Instagram" style="display:block;">',
+            facebook: '<img src="https://cdn.simpleicons.org/facebook/1877F2" width="24" height="24" alt="Facebook" style="display:block;">',
+            twitter: '<img src="https://cdn.simpleicons.org/x/000000" width="24" height="24" alt="X/Twitter" style="display:block;">',
+            linkedin: '<img src="https://cdn.simpleicons.org/linkedin/0A66C2" width="24" height="24" alt="LinkedIn" style="display:block;">',
+            youtube: '<img src="https://cdn.simpleicons.org/youtube/FF0000" width="24" height="24" alt="YouTube" style="display:block;">',
+            tiktok: '<img src="https://cdn.simpleicons.org/tiktok/000000" width="24" height="24" alt="TikTok" style="display:block;">',
+            spotify: '<img src="https://cdn.simpleicons.org/spotify/1DB954" width="24" height="24" alt="Spotify" style="display:block;">',
+            'apple-music': '<img src="https://cdn.simpleicons.org/applemusic/FA243C" width="24" height="24" alt="Apple Music" style="display:block;">',
+            soundcloud: '<img src="https://cdn.simpleicons.org/soundcloud/FF3300" width="24" height="24" alt="SoundCloud" style="display:block;">',
+            twitch: '<img src="https://cdn.simpleicons.org/twitch/9146FF" width="24" height="24" alt="Twitch" style="display:block;">',
+            github: '<img src="https://cdn.simpleicons.org/github/181717" width="24" height="24" alt="GitHub" style="display:block;">',
+            website: '<svg fill="#64748b" viewBox="0 0 24 24" width="24" height="24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>'
+        };
+        
+        // Render platform icons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.platform-icon').forEach(function(iconEl) {
+                const platform = iconEl.getAttribute('data-platform') || 'website';
+                const iconSvg = platformIcons[platform] || platformIcons.website;
+                iconEl.innerHTML = iconSvg;
+                iconEl.style.display = 'inline-flex';
+                iconEl.style.alignItems = 'center';
+            });
+        });
+
+        async function openLink(event, url, linkId) {
+            // Only open link if not clicking on play button
+            if (!event.target.closest('.play-button')) {
+                // Track link click BEFORE opening URL
+                try {
+                    await fetch(`/api/clicks/${username}/${linkId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error tracking click:', error);
+                }
+                
+                // Then open link in new tab
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        function toggleAudio(event, linkId) {
+            event.stopPropagation();
+            
+            const audio = document.getElementById('audio' + linkId);
+            const playBtn = document.getElementById('playBtn' + linkId);
+            
+            if (!audio) return;
+            
+            // If clicking the same button
+            if (currentAudio === audio) {
+                if (audio.paused) {
+                    audio.play();
+                    playBtn.classList.add('playing');
+                    // Track voice play when starting playback
+                    trackVoicePlay();
+                } else {
+                    audio.pause();
+                    playBtn.classList.remove('playing');
+                }
+            } else {
+                // Stop current audio if playing
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                    if (currentPlayBtn) {
+                        currentPlayBtn.classList.remove('playing');
+                    }
+                }
+                
+                // Play new audio
+                audio.play();
+                playBtn.classList.add('playing');
+                currentAudio = audio;
+                currentPlayBtn = playBtn;
+                
+                // Track voice play when starting new audio
+                trackVoicePlay();
+            }
+            
+            // Reset button when audio ends
+            audio.onended = function() {
+                playBtn.classList.remove('playing');
+                if (currentAudio === audio) {
+                    currentAudio = null;
+                    currentPlayBtn = null;
+                }
+            };
+        }
+        
+        // Track voice message play
+        async function trackVoicePlay() {
+            try {
+                await fetch(`/api/track/voice-play/${username}`, {
+                    method: 'POST'
+                });
+            } catch (error) {
+                console.error('Error tracking voice play:', error);
+            }
+        }
+        
+        // Welcome audio player functionality
+        function toggleWelcomeAudio() {
+            const audio = document.getElementById('welcomeAudio');
+            const playBtn = document.getElementById('welcomePlayBtn');
+            const waveform = document.getElementById('welcomeWaveform');
+            
+            if (!audio) return;
+            
+            if (audio.paused) {
+                audio.play();
+                playBtn.classList.add('playing');
+                playBtn.querySelector('.play-icon').textContent = '⏸️';
+                waveform.classList.add('active');
+                trackVoicePlay();
+            } else {
+                audio.pause();
+                playBtn.classList.remove('playing');
+                playBtn.querySelector('.play-icon').textContent = '▶️';
+                waveform.classList.remove('active');
+            }
+            
+            // Reset when audio ends
+            audio.onended = function() {
+                playBtn.classList.remove('playing');
+                playBtn.querySelector('.play-icon').textContent = '▶️';
+                waveform.classList.remove('active');
+            };
+        }
+        
+        // Load welcome audio duration
+        const welcomeAudio = document.getElementById('welcomeAudio');
+        if (welcomeAudio) {
+            welcomeAudio.addEventListener('loadedmetadata', function() {
+                const duration = Math.floor(welcomeAudio.duration);
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                document.getElementById('welcomeDuration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            });
+        }
+    </script>
+</body>
+</html>

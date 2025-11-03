@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - selfie.fm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            --color-purple: #7C3AED;
+            --color-pink: #EC4899;
+            --color-dark: #1a1a2e;
+            --color-gray: #64748b;
+            --color-success: #22c55e;
+            --color-error: #ef4444;
+            --radius-xl: 24px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: gradientShift 10s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .signup-container {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .signup-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 48px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .signup-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 8px;
+        }
+        
+        .signup-header p {
+            font-size: 16px;
+            color: var(--color-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-purple);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+        }
+        
+        .form-hint {
+            font-size: 13px;
+            color: var(--color-gray);
+            margin-top: 8px;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+        }
+        
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--color-error);
+            color: var(--color-error);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-submit.loading .loading-spinner {
+            display: inline-block;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+            
+            .signup-card {
+                padding: 32px 24px;
+            }
+            
+            .signup-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <a href="/" class="logo">
+                    <img src="/static/images/logo.svg" alt="selfie.fm logo">
+                    <span class="logo-text">selfie.fm</span>
+                </a>
+                <h1>Get Started</h1>
+                <p>Create your account in seconds</p>
+            </div>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                    >
+                    <div class="form-hint">We'll auto-generate your username from this</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        minlength="8"
+                        placeholder="At least 8 characters"
+                        autocomplete="new-password"
+                    >
+                    <div class="form-hint">Must be at least 8 characters with letters and numbers</div>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="loading-spinner"></span>
+                    <span>Create Account</span>
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 24px; color: var(--color-gray); font-size: 14px;">
+                Already have an account? <a href="/login" style="color: var(--color-purple); font-weight: 600; text-decoration: none;">Sign in</a>
+            </div>
+        </div>
+        
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+    
+    <!-- Display Name Modal -->
+    <div id="displayNameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Almost there!</h2>
+                <p>Choose your display name</p>
+            </div>
+            
+            <div id="modalError" class="error-message"></div>
+            
+            <form id="displayNameForm">
+                <div class="form-group">
+                    <label for="displayName">Display Name</label>
+                    <input 
+                        type="text" 
+                        id="displayName" 
+                        name="displayName" 
+                        required 
+                        placeholder="e.g., Greg Bessoni"
+                        autocomplete="name"
+                        maxlength="50"
+                    >
+                    <div class="form-hint">This is how your name appears on your profile</div>
+                </div>
+                
+                <div class="profile-preview">
+                    <div class="profile-url-label">Your profile URL:</div>
+                    <div class="profile-url" id="profileUrl">selfie.fm/<span id="usernamePreview">username</span></div>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="displayNameSubmit">
+                    <span class="loading-spinner"></span>
+                    <span>Continue to Dashboard</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .modal-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 8px;
+        }
+        
+        .modal-header p {
+            font-size: 16px;
+            color: var(--color-gray);
+        }
+        
+        .profile-preview {
+            background: rgba(124, 58, 237, 0.05);
+            border: 2px dashed rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .profile-url-label {
+            font-size: 13px;
+            color: var(--color-gray);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .profile-url {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-purple);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #usernamePreview {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+    
+    <script>
+        let userData = null;
+        
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            const errorMessage = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Hide error
+            errorMessage.classList.remove('show');
+            
+            // Show loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            try {
+                // Send JSON instead of FormData
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to create account');
+                }
+                
+                // Store user data
+                userData = data;
+                
+                // Show display name modal instead of redirecting
+                document.getElementById('usernamePreview').textContent = data.username;
+                document.getElementById('displayNameModal').classList.add('show');
+                
+                // Reset signup form button
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('show');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Handle display name form submission
+        document.getElementById('displayNameForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const displayName = document.getElementById('displayName').value.trim();
+            const modalError = document.getElementById('modalError');
+            const displayNameSubmit = document.getElementById('displayNameSubmit');
+            
+            // Hide error
+            modalError.classList.remove('show');
+            
+            // Show loading
+            displayNameSubmit.classList.add('loading');
+            displayNameSubmit.disabled = true;
+            
+            try {
+                if (!userData || !userData.username) {
+                    throw new Error('Session error. Please refresh and try again.');
+                }
+                
+                // Update display name via API
+                const formData = new FormData();
+                formData.append('display_name', displayName);
+                formData.append('bio', '');
+                
+                const response = await fetch(`/api/admin/${userData.username}/profile`, {
+                    method: 'PUT',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update display name');
+                }
+                
+                // Redirect to dashboard
+                window.location.href = userData.redirect || `/dashboard/${userData.username}`;
+                
+            } catch (error) {
+                modalError.textContent = error.message;
+                modalError.classList.add('show');
+                displayNameSubmit.classList.remove('loading');
+                displayNameSubmit.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

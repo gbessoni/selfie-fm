@@ -1,0 +1,3705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - selfie.fm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            --gradient-purple: linear-gradient(135deg, #7C3AED 0%, #a855f7 100%);
+            --gradient-pink: linear-gradient(135deg, #EC4899 0%, #f472b6 100%);
+            --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            --gradient-green: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+            --color-purple: #7C3AED;
+            --color-pink: #EC4899;
+            --color-dark: #1a1a2e;
+            --color-gray: #64748b;
+            --color-light-gray: #f1f5f9;
+            --color-border: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --sidebar-width: 280px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fafbfc;
+            color: var(--color-dark);
+            line-height: 1.6;
+        }
+        
+        /* Layout */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .sidebar-logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .sidebar-logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: var(--radius-md);
+            color: var(--color-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: var(--color-light-gray);
+            color: var(--color-dark);
+        }
+        
+        .nav-item.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .sidebar-user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .sidebar-user-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-user-info p {
+            font-size: 13px;
+            color: var(--color-gray);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+        
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid var(--color-border);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .top-bar-title h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+        
+        .top-bar-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--color-dark);
+            border: 1px solid var(--color-border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--color-light-gray);
+        }
+        
+        .content-area {
+            padding: 32px;
+            max-width: 1400px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+        
+        .stat-card.purple::before { background: var(--gradient-purple); }
+        .stat-card.pink::before { background: var(--gradient-pink); }
+        .stat-card.blue::before { background: var(--gradient-blue); }
+        .stat-card.green::before { background: var(--gradient-green); }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient);
+            color: white;
+            font-size: 24px;
+        }
+        
+        .stat-card.purple .stat-icon { background: var(--gradient-purple); }
+        .stat-card.pink .stat-icon { background: var(--gradient-pink); }
+        .stat-card.blue .stat-icon { background: var(--gradient-blue); }
+        .stat-card.green .stat-icon { background: var(--gradient-green); }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--color-gray);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--color-dark);
+            line-height: 1;
+        }
+        
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+        
+        .chart-header {
+            margin-bottom: 24px;
+        }
+        
+        .chart-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+        
+        /* Links Management */
+        .links-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .links-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .links-header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .link-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+            cursor: move;
+        }
+        
+        .link-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-purple);
+        }
+        
+        .link-card.sortable-ghost {
+            opacity: 0.4;
+        }
+        
+        .drag-handle {
+            color: var(--color-gray);
+            cursor: grab;
+            font-size: 20px;
+        }
+        
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .link-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .link-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .link-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: 4px;
+        }
+        
+        .link-url {
+            font-size: 14px;
+            color: var(--color-gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .link-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .link-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--color-gray);
+        }
+        
+        .voice-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--color-purple);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .voice-badge.missing {
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--color-gray);
+        }
+        
+        .add-voice-btn {
+            padding: 6px 14px;
+            background: var(--gradient-purple);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .add-voice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .voice-pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--color-purple);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+        
+        .link-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: var(--color-light-gray);
+            color: var(--color-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-icon:hover {
+            background: var(--color-purple);
+            color: white;
+        }
+        
+        .btn-icon.delete:hover {
+            background: #ef4444;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #cbd5e0;
+            border-radius: 34px;
+            transition: 0.4s;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+        
+        input:checked + .toggle-slider {
+            background: var(--gradient-primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .modal-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--color-light-gray);
+            color: var(--color-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--color-border);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-purple);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .char-count {
+            font-size: 12px;
+            color: var(--color-gray);
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        .voice-section {
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--color-light-gray);
+            border-radius: var(--radius-md);
+        }
+        
+        .voice-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        
+        .voice-section-title {
+            font-weight: 600;
+            color: var(--color-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .voice-section-content {
+            display: none;
+        }
+        
+        .voice-section-content.active {
+            display: block;
+        }
+        
+        .audio-preview {
+            margin-top: 16px;
+            padding: 12px;
+            background: white;
+            border-radius: var(--radius-md);
+        }
+        
+        .platform-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--color-light-gray);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+        }
+        
+        .platform-icon-preview {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .platform-name {
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-gray);
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+        }
+        
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #15803d;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .content-area {
+                padding: 20px 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-bar {
+                padding: 16px 20px;
+            }
+            
+            .modal-content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-logo">
+                    <img src="/static/images/logo.svg" alt="selfie.fm">
+                    <span class="sidebar-logo-text">selfie.fm</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item active" onclick="switchSection('analytics')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Analytics
+                </div>
+                
+                <div class="nav-item" onclick="switchSection('links')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                    </svg>
+                    Manage Links
+                </div>
+                
+                <div class="nav-item" onclick="switchSection('voice')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                    </svg>
+                    Voice Clone
+                </div>
+                
+                <div class="nav-item" onclick="switchSection('settings')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Profile Settings
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">
+                        {{ user.display_name[0].upper() }}
+                    </div>
+                    <div class="sidebar-user-info">
+                        <h4>{{ user.display_name }}</h4>
+                        <p>@{{ user.username }}</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-title">
+                    <h1 id="page-title">Analytics</h1>
+                </div>
+                <div class="top-bar-actions">
+                    <a href="/preview/{{ user.username }}" class="btn btn-secondary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        Preview
+                    </a>
+                    {% if user.is_published %}
+                    <a href="/{{ user.username }}" target="_blank" class="btn btn-primary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                        </svg>
+                        View Live
+                    </a>
+                    {% endif %}
+                    <button class="btn btn-secondary" onclick="logout()" style="border: none;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <!-- Analytics Section -->
+                <div id="analytics-section" class="section active">
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-label">Profile Views</div>
+                                    <div class="stat-value" id="stat-views">0</div>
+                                </div>
+                                <div class="stat-icon">👁️</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card pink">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-label">Link Clicks</div>
+                                    <div class="stat-value" id="stat-clicks">0</div>
+                                </div>
+                                <div class="stat-icon">🔗</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card blue">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-label">Voice Plays</div>
+                                    <div class="stat-value" id="stat-voice">0</div>
+                                </div>
+                                <div class="stat-icon">🎤</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card green">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-label">Conversion Rate</div>
+                                    <div class="stat-value" id="stat-conversion">0%</div>
+                                </div>
+                                <div class="stat-icon">📈</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Profile Views (Last 30 Days)</h3>
+                            </div>
+                            <canvas id="viewsChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Clicks by Link</h3>
+                            </div>
+                            <canvas id="clicksChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Links Section -->
+                <div id="links-section" class="section">
+                    <div class="links-header">
+                        <h2>Your Links</h2>
+                        <div class="links-header-actions">
+                            <button class="btn btn-secondary" onclick="showImportModal()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Import from Linktree
+                            </button>
+                            <button class="btn btn-primary" onclick="showAddLinkModal()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Add New Link
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="links-list" id="sortable-links">
+                        <!-- Links loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Voice Clone Section -->
+                <div id="voice-section" class="section">
+                    <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; margin-bottom: 24px;">Voice Clone</h2>
+                    
+                    <!-- Voice Clone Status Card -->
+                    <div class="chart-card" id="voice-clone-status-card">
+                        <div id="voice-clone-loading" style="text-align: center; padding: 40px;">
+                            <div class="loading" style="display: inline-block;"></div>
+                            <p style="margin-top: 16px; color: var(--color-gray);">Loading voice clone status...</p>
+                        </div>
+                        
+                        <!-- No Voice Clone -->
+                        <div id="voice-clone-none" style="display: none;">
+                            <div style="text-align: center; padding: 40px;">
+                                <div style="font-size: 64px; margin-bottom: 16px;">🎤</div>
+                                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">No Voice Clone Yet</h3>
+                                <p style="color: var(--color-gray); margin-bottom: 24px;">Create your voice clone to add personalized voice messages to your links</p>
+                                <button class="btn btn-primary" onclick="showVoiceCloneModal()">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                                    </svg>
+                                    Create Voice Clone
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Voice Clone Exists -->
+                        <div id="voice-clone-exists" style="display: none;">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                                <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                                    ✓
+                                </div>
+                                <div style="flex: 1;">
+                                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">Voice Clone Active</h3>
+                                    <p style="color: var(--color-gray); font-size: 14px;">Your voice clone is ready to use for link messages</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Voice Sample Preview -->
+                            <div id="voice-sample-preview" style="background: var(--color-light-gray); padding: 20px; border-radius: var(--radius-md); margin-bottom: 20px; display: none;">
+                                <h4 style="font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span>📝</span>
+                                    <span>Your Voice Sample:</span>
+                                </h4>
+                                <audio id="voice-sample-audio" controls style="width: 100%; margin-bottom: 8px;"></audio>
+                                <p style="font-size: 12px; color: var(--color-gray);">This is the voice sample used to create your voice clone</p>
+                            </div>
+                            
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-secondary" onclick="showVoiceCloneModal()">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    Recreate Voice Clone
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Section -->
+                <div id="settings-section" class="section">
+                    <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; margin-bottom: 24px;">Profile Settings</h2>
+                    
+                    <!-- Profile Photo Preview Card -->
+                    <div class="chart-card" style="margin-bottom: 24px;">
+                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center;">Your Profile Photo</h3>
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <div class="sidebar-user-avatar" id="profile-photo-preview" style="width: 150px; height: 150px; font-size: 64px; margin: 0 auto 16px; box-shadow: var(--shadow-lg);">
+                                {% if user.avatar_url %}
+                                    <img src="{{ user.avatar_url }}" alt="{{ user.display_name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                {% else %}
+                                    {{ user.display_name[0].upper() }}
+                                {% endif %}
+                            </div>
+                            <p style="font-size: 14px; color: var(--color-gray); margin-bottom: 20px;">This is how your profile photo appears to visitors</p>
+                            <input type="file" id="avatar-upload" accept="image/*" style="display: none;" onchange="uploadAvatar()">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('avatar-upload').click()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Change Photo
+                            </button>
+                            <p style="font-size: 13px; color: var(--color-gray); margin-top: 8px;">JPG, PNG, GIF or WebP. Max 5MB.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card" style="margin-bottom: 24px;">
+                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Banner Image</h3>
+                        <div>
+                            {% if user.banner_url %}
+                                <div style="width: 100%; height: 200px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 16px; background: var(--color-light-gray);">
+                                    <img src="{{ user.banner_url }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            {% else %}
+                                <div style="width: 100%; height: 200px; border-radius: var(--radius-md); background: var(--gradient-primary); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                                    No banner image
+                                </div>
+                            {% endif %}
+                            <input type="file" id="banner-upload" accept="image/*" style="display: none;" onchange="uploadBanner()">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('banner-upload').click()">
+                                Upload Banner Image
+                            </button>
+                            <p style="font-size: 13px; color: var(--color-gray); margin-top: 8px;">JPG, PNG, GIF or WebP. Max 5MB. Recommended: 1500x500px</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Profile Information</h3>
+                        <div id="profile-save-toast" class="alert" style="display: none; margin-bottom: 20px;"></div>
+                        <form id="settings-form" onsubmit="updateProfile(event)">
+                            <div class="form-group">
+                                <label class="form-label">Display Name</label>
+                                <input type="text" id="display-name" class="form-input" value="{{ user.display_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bio</label>
+                                <textarea id="bio" class="form-input form-textarea">{{ user.bio or '' }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span id="save-profile-text">Save Changes</span>
+                                <span id="save-profile-loading" style="display: none;" class="loading"></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Import Linktree Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Import from Linktree</h2>
+                <button class="modal-close" onclick="closeModal('import-modal')">✕</button>
+            </div>
+            <div id="import-alert"></div>
+            <form id="import-form" onsubmit="importLinktree(event)">
+                <div class="form-group">
+                    <label class="form-label">Linktree URL or Username</label>
+                    <input type="text" id="linktree-url" class="form-input" placeholder="linktr.ee/username or just username" required>
+                    <div class="char-count">Enter your Linktree URL or username</div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span id="import-btn-text">Import Links</span>
+                    <span id="import-btn-loading" style="display: none;" class="loading"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Onboarding Wizard Modal -->
+    <div id="onboarding-wizard" class="modal" style="z-index: 2000;">
+        <div class="modal-content" style="max-width: 900px; max-height: 95vh;">
+            <!-- Wizard Header with Stepper -->
+            <div style="margin-bottom: 32px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 class="modal-title" id="wizard-step-title">Setup Your Voice Links</h2>
+                    <button class="modal-close" onclick="closeOnboardingWizard()">✕</button>
+                </div>
+                
+                <!-- Stepper -->
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div class="wizard-step" data-step="1">
+                        <div class="wizard-step-circle">1</div>
+                        <div class="wizard-step-label">Generate Scripts</div>
+                    </div>
+                    <div class="wizard-step-line"></div>
+                    <div class="wizard-step" data-step="2">
+                        <div class="wizard-step-circle">2</div>
+                        <div class="wizard-step-label">Select Scripts</div>
+                    </div>
+                    <div class="wizard-step-line"></div>
+                    <div class="wizard-step" data-step="3">
+                        <div class="wizard-step-circle">3</div>
+                        <div class="wizard-step-label">Voice Clone</div>
+                    </div>
+                    <div class="wizard-step-line"></div>
+                    <div class="wizard-step" data-step="4">
+                        <div class="wizard-step-circle">4</div>
+                        <div class="wizard-step-label">Generate Audio</div>
+                    </div>
+                    <div class="wizard-step-line"></div>
+                    <div class="wizard-step" data-step="5">
+                        <div class="wizard-step-circle">5</div>
+                        <div class="wizard-step-label">Publish</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 1: Auto-Generate Scripts -->
+            <div id="wizard-step-1" class="wizard-step-content active">
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 64px; margin-bottom: 24px;" id="step1-icon">✍️</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;" id="step1-title">Analyzing your links...</h3>
+                    <p style="color: var(--color-gray); margin-bottom: 32px;" id="step1-subtitle">We're creating personalized scripts for each link</p>
+                    
+                    <!-- Progress Bar -->
+                    <div style="background: var(--color-light-gray); border-radius: 50px; height: 12px; overflow: hidden; margin-bottom: 16px;">
+                        <div id="step1-progress-bar" style="width: 0%; height: 100%; background: var(--gradient-primary); transition: width 0.5s ease;"></div>
+                    </div>
+                    <div style="font-size: 14px; color: var(--color-gray);" id="step1-progress-text">0 of 0 links processed</div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Script Selection -->
+            <div id="wizard-step-2" class="wizard-step-content">
+                <p style="color: var(--color-gray); margin-bottom: 24px; text-align: center;">Select the best script for each link, or write your own custom script</p>
+                <div id="script-selection-grid" style="max-height: 60vh; overflow-y: auto; padding-right: 8px;">
+                    <!-- Links with script options will be loaded here -->
+                </div>
+                <div style="margin-top: 24px; display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="previousWizardStep()" style="flex: 1;">
+                        ← Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextWizardStep()" style="flex: 2;" id="step2-next-btn">
+                        Continue to Voice Clone →
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Voice Recording -->
+            <div id="wizard-step-3" class="wizard-step-content">
+                <div style="text-align: center; margin-bottom: 32px;">
+                    <div style="font-size: 64px; margin-bottom: 16px;">🎤</div>
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;" id="step3-title">First, let's clone your voice</h3>
+                    <p style="color: var(--color-gray);" id="step3-subtitle">(one-time setup)</p>
+                </div>
+                
+                <!-- Sample Script Display -->
+                <div style="background: white; border: 2px solid var(--color-purple); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-md);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                        <h4 style="font-weight: 700; color: var(--color-dark); display: flex; align-items: center; gap: 8px; margin: 0;">
+                            <span style="font-size: 20px;">📝</span>
+                            <span>Sample Script:</span>
+                        </h4>
+                        <button type="button" onclick="copyScriptToClipboard()" style="padding: 6px 12px; background: var(--color-light-gray); border: none; border-radius: 8px; color: var(--color-dark); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='var(--color-purple)'; this.style.color='white';" onmouseout="this.style.background='var(--color-light-gray)'; this.style.color='var(--color-dark)';">
+                            📋 Copy
+                        </button>
+                    </div>
+                    <div id="recording-script-display" style="background: var(--color-light-gray); padding: 20px; border-radius: var(--radius-md); font-size: 15px; line-height: 1.8; color: var(--color-dark); border-left: 4px solid var(--color-purple);">
+                        "Are you ready for the most incredible voice clone you've ever heard? I know I can't wait to hear it! You're going to be blown away! Okay, maybe I should calm down and finish this recording."
+                    </div>
+                    <div style="margin-top: 12px; font-size: 13px; color: var(--color-gray); text-align: center;">
+                        💡 Read this naturally for 20-30 seconds
+                    </div>
+                </div>
+                
+                <div style="background: var(--color-light-gray); border-radius: var(--radius-lg); padding: 32px;">
+                    <div id="wizard-recording-status" style="font-size: 18px; font-weight: 600; text-align: center; margin-bottom: 16px; color: var(--color-dark);">
+                        Ready to Record
+                    </div>
+                    
+                    <div id="wizard-recording-timer" style="font-size: 48px; font-weight: 700; text-align: center; margin-bottom: 24px; color: var(--color-purple); display: none;">
+                        00:00
+                    </div>
+                    
+                    <div id="wizard-recording-controls" style="text-align: center;">
+                        <button type="button" id="wizard-start-recording-btn" class="btn btn-primary" onclick="startWizardRecording()" style="margin-right: 12px;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                            </svg>
+                            Start Recording
+                        </button>
+                        
+                        <button type="button" id="wizard-stop-recording-btn" class="btn btn-secondary" onclick="stopWizardRecording()" style="display: none;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                            </svg>
+                            Stop Recording
+                        </button>
+                    </div>
+                    
+                    <div id="wizard-recording-playback" style="display: none; margin-top: 24px;">
+                        <audio id="wizard-voice-preview" controls style="width: 100%; margin-bottom: 16px;"></audio>
+                        <div style="text-align: center;">
+                            <button type="button" class="btn btn-primary" onclick="uploadWizardVoiceClone()" style="width: 100%; max-width: 300px;">
+                                <span id="wizard-upload-voice-text">Upload Voice Clone</span>
+                                <span id="wizard-upload-voice-loading" style="display: none;" class="loading"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 24px; display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="previousWizardStep()" style="flex: 1;">
+                        ← Back
+                    </button>
+                    <button class="btn btn-primary" onclick="skipVoiceClone()" style="flex: 2;" id="step3-skip-btn">
+                        Skip for Now →
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Generate Audio -->
+            <div id="wizard-step-4" class="wizard-step-content">
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 64px; margin-bottom: 24px;">🎙️</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;">Generating audio for your links...</h3>
+                    <p style="color: var(--color-gray); margin-bottom: 32px;">This may take a minute</p>
+                    
+                    <!-- Progress Bar -->
+                    <div style="background: var(--color-light-gray); border-radius: 50px; height: 12px; overflow: hidden; margin-bottom: 16px;">
+                        <div id="step4-progress-bar" style="width: 0%; height: 100%; background: var(--gradient-primary); transition: width 0.5s ease;"></div>
+                    </div>
+                    <div style="font-size: 14px; color: var(--color-gray); margin-bottom: 32px;" id="step4-progress-text">0 of 0 audio files generated</div>
+                    
+                    <!-- Preview Players -->
+                    <div id="audio-preview-list" style="display: none; text-align: left; margin-top: 32px;">
+                        <h4 style="font-weight: 700; margin-bottom: 16px;">Preview Your Audio:</h4>
+                        <div id="audio-preview-items"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 5: Preview & Publish -->
+            <div id="wizard-step-5" class="wizard-step-content">
+                <div style="text-align: center; margin-bottom: 32px;">
+                    <div style="font-size: 64px; margin-bottom: 16px;">🎉</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">You're All Set!</h3>
+                    <p style="color: var(--color-gray);">Preview your profile and publish when ready</p>
+                </div>
+                
+                <!-- Profile Preview -->
+                <div style="background: var(--color-light-gray); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px;">
+                    <h4 style="font-weight: 700; margin-bottom: 16px;">Profile Preview</h4>
+                    <div id="profile-preview-content">
+                        <div style="text-align: center; padding: 20px; color: var(--color-gray);">
+                            Loading preview...
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="previousWizardStep()" style="flex: 1;">
+                        ← Back to Edit
+                    </button>
+                    <button class="btn btn-primary" onclick="publishProfile()" style="flex: 2;">
+                        <span id="publish-btn-text">🚀 Publish Profile</span>
+                        <span id="publish-btn-loading" style="display: none;" class="loading"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* Wizard Stepper Styles */
+        .wizard-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .wizard-step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-light-gray);
+            color: var(--color-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .wizard-step.active .wizard-step-circle {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .wizard-step.completed .wizard-step-circle {
+            background: var(--color-purple);
+            color: white;
+        }
+        
+        .wizard-step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-gray);
+            text-align: center;
+        }
+        
+        .wizard-step.active .wizard-step-label {
+            color: var(--color-purple);
+        }
+        
+        .wizard-step-line {
+            height: 2px;
+            background: var(--color-border);
+            flex: 0 0 40px;
+            margin-top: 20px;
+        }
+        
+        .wizard-step-content {
+            display: none;
+        }
+        
+        .wizard-step-content.active {
+            display: block;
+            animation: wizardFadeIn 0.4s ease;
+        }
+        
+        @keyframes wizardFadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Script Selection Cards */
+        .script-link-card {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .script-link-card:hover {
+            border-color: var(--color-purple);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .script-option-card {
+            background: var(--color-light-gray);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .script-option-card:hover {
+            border-color: var(--color-purple);
+            background: white;
+        }
+        
+        .script-option-card.selected {
+            border-color: var(--color-purple);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+        }
+        
+        .script-option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .script-option-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: var(--gradient-purple);
+            color: white;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .script-option-text {
+            color: var(--color-dark);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .script-option-stats {
+            font-size: 12px;
+            color: var(--color-gray);
+        }
+        
+        .audio-preview-item {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .audio-preview-item audio {
+            flex: 1;
+            height: 40px;
+        }
+    </style>
+    
+    <!-- Voice Clone Modal -->
+    <div id="voice-clone-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Voice Clone</h2>
+                <button class="modal-close" onclick="closeModal('voice-clone-modal')">✕</button>
+            </div>
+            <div id="voice-clone-alert"></div>
+            
+            <div class="form-group">
+                <label class="form-label">Record Your Voice Sample</label>
+                <p style="font-size: 14px; color: var(--color-gray); margin-bottom: 16px;">
+                    <strong>Step 1:</strong> Record 20-30 seconds of yourself speaking naturally.<br>
+                    <strong>Step 2:</strong> We'll send this to ElevenLabs to create your AI voice clone.<br>
+                    <strong>Result:</strong> Your voice clone will then read all your link scripts!
+                </p>
+                
+                <!-- Sample Script Card -->
+                <div style="background: white; border: 2px solid var(--color-purple); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-md);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <h4 style="font-weight: 700; color: var(--color-dark); display: flex; align-items: center; gap: 8px; margin: 0; font-size: 15px;">
+                            <span style="font-size: 18px;">📝</span>
+                            <span>Need something to say? Give this a try:</span>
+                        </h4>
+                        <button type="button" onclick="copyModalScriptToClipboard()" style="padding: 6px 12px; background: var(--color-light-gray); border: none; border-radius: 8px; color: var(--color-dark); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='var(--color-purple)'; this.style.color='white';" onmouseout="this.style.background='var(--color-light-gray)'; this.style.color='var(--color-dark)';">
+                            📋 Copy
+                        </button>
+                    </div>
+                    <div id="modal-script-display" style="background: var(--color-light-gray); padding: 16px; border-radius: var(--radius-md); font-size: 14px; line-height: 1.7; color: var(--color-dark); border-left: 4px solid var(--color-purple);">
+                        "Are you ready for the most incredible voice clone you've ever heard? I know I can't wait to hear it! You're going to be blown away! Okay, maybe I should calm down and finish this recording."
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: var(--color-gray); text-align: center;">
+                        💡 Read this naturally for 20-30 seconds
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding: 24px; background: var(--color-light-gray); border-radius: var(--radius-md);">
+                    <div id="recording-status" style="margin-bottom: 16px; font-weight: 600; color: var(--color-dark);">
+                        Ready to Record
+                    </div>
+                    
+                    <div id="recording-timer" style="font-size: 32px; font-weight: 700; margin-bottom: 24px; color: var(--color-purple); display: none;">
+                        00:00
+                    </div>
+                    
+                    <div id="recording-controls">
+                        <button type="button" id="start-recording-btn" class="btn btn-primary" onclick="startRecording()" style="margin-right: 12px;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                            </svg>
+                            Start Recording
+                        </button>
+                        
+                        <button type="button" id="stop-recording-btn" class="btn btn-secondary" onclick="stopRecording()" style="display: none;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                            </svg>
+                            Stop Recording
+                        </button>
+                    </div>
+                    
+                    <div id="recording-playback" style="display: none; margin-top: 24px;">
+                        <audio id="voice-clone-audio-preview" controls style="width: 100%; margin-bottom: 16px;"></audio>
+                        <button type="button" class="btn btn-primary" onclick="uploadVoiceClone()" style="width: 100%;">
+                            <span id="upload-voice-text">Upload Voice Sample</span>
+                            <span id="upload-voice-loading" style="display: none;" class="loading"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Link Modal -->
+    <div id="link-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="link-modal-title">Add New Link</h2>
+                <button class="modal-close" onclick="closeModal('link-modal')">✕</button>
+            </div>
+            <div id="link-alert"></div>
+            
+            <!-- Platform Preview -->
+            <div id="platform-preview" class="platform-preview" style="display: none;">
+                <div id="platform-icon-preview" class="platform-icon-preview"></div>
+                <div>
+                    <div class="platform-name" id="platform-name-preview">Website</div>
+                    <div style="font-size: 13px; color: var(--color-gray);">Auto-detected</div>
+                </div>
+            </div>
+            
+            <form id="link-form" onsubmit="saveLink(event)">
+                <input type="hidden" id="link-id">
+                
+                <div class="form-group">
+                    <label class="form-label">Link Title</label>
+                    <input type="text" id="link-title" class="form-input" placeholder="My Instagram" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">URL</label>
+                    <input type="url" id="link-url" class="form-input" placeholder="https://instagram.com/username" required oninput="detectPlatform()">
+                </div>
+                
+                <div style="margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <span id="save-link-text">Save Link</span>
+                        <span id="save-link-loading" style="display: none;" class="loading"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const username = "{{ user.username }}";
+        const platformIcons = {
+            instagram: { icon: '<img src="https://cdn.simpleicons.org/instagram" width="24" height="24" alt="Instagram" style="display:block;">', color: '#E4405F' },
+            facebook: { icon: '<img src="https://cdn.simpleicons.org/facebook/1877F2" width="24" height="24" alt="Facebook" style="display:block;">', color: '#1877F2' },
+            twitter: { icon: '<img src="https://cdn.simpleicons.org/x/000000" width="24" height="24" alt="X/Twitter" style="display:block;">', color: '#000000' },
+            linkedin: { icon: '<img src="https://cdn.simpleicons.org/linkedin/0A66C2" width="24" height="24" alt="LinkedIn" style="display:block;">', color: '#0A66C2' },
+            youtube: { icon: '<img src="https://cdn.simpleicons.org/youtube/FF0000" width="24" height="24" alt="YouTube" style="display:block;">', color: '#FF0000' },
+            tiktok: { icon: '<img src="https://cdn.simpleicons.org/tiktok/000000" width="24" height="24" alt="TikTok" style="display:block;">', color: '#000000' },
+            spotify: { icon: '<img src="https://cdn.simpleicons.org/spotify/1DB954" width="24" height="24" alt="Spotify" style="display:block;">', color: '#1DB954' },
+            'apple-music': { icon: '<img src="https://cdn.simpleicons.org/applemusic/FA243C" width="24" height="24" alt="Apple Music" style="display:block;">', color: '#FA243C' },
+            soundcloud: { icon: '<img src="https://cdn.simpleicons.org/soundcloud/FF3300" width="24" height="24" alt="SoundCloud" style="display:block;">', color: '#FF5500' },
+            twitch: { icon: '<img src="https://cdn.simpleicons.org/twitch/9146FF" width="24" height="24" alt="Twitch" style="display:block;">', color: '#9146FF' },
+            github: { icon: '<img src="https://cdn.simpleicons.org/github/181717" width="24" height="24" alt="GitHub" style="display:block;">', color: '#181717' },
+            website: { icon: '<svg fill="white" viewBox="0 0 24 24" width="24" height="24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>', color: '#667eea' }
+        };
+        
+        let currentLinkId = null;
+        
+        // Section switching
+        function switchSection(section) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(section + '-section').classList.add('active');
+            
+            const titles = {
+                'analytics': 'Analytics',
+                'links': 'Manage Links',
+                'voice': 'Voice Clone',
+                'settings': 'Profile Settings'
+            };
+            document.getElementById('page-title').textContent = titles[section];
+            
+            if (section === 'analytics') {
+                loadAnalytics();
+            } else if (section === 'links') {
+                loadLinks();
+            }
+        }
+        
+        // Load analytics
+        async function loadAnalytics() {
+            try {
+                const response = await fetch(`/api/admin/${username}/stats`);
+                const data = await response.json();
+                
+                animateValue('stat-views', 0, data.profile_views_30d || 0, 1000);
+                animateValue('stat-clicks', 0, data.total_link_clicks || 0, 1000);
+                animateValue('stat-voice', 0, data.voice_message_plays || 0, 1000);
+                
+                const conversion = data.conversion_rate || 0;
+                document.getElementById('stat-conversion').textContent = conversion + '%';
+                
+                await loadCharts();
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+        
+        function animateValue(id, start, end, duration) {
+            const element = document.getElementById(id);
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 16);
+        }
+        
+        async function loadCharts() {
+            try {
+                const viewsResponse = await fetch(`/api/admin/${username}/views-chart`);
+                const viewsData = await viewsResponse.json();
+                
+                const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+                new Chart(viewsCtx, {
+                    type: 'line',
+                    data: {
+                        labels: viewsData.labels || [],
+                        datasets: [{
+                            label: 'Views',
+                            data: viewsData.data || [],
+                            borderColor: '#7C3AED',
+                            backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                    }
+                });
+                
+                const clicksResponse = await fetch(`/api/admin/${username}/clicks-chart`);
+                const clicksData = await clicksResponse.json();
+                
+                const clicksCtx = document.getElementById('clicksChart').getContext('2d');
+                new Chart(clicksCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: clicksData.labels || [],
+                        datasets: [{
+                            label: 'Clicks',
+                            data: clicksData.data || [],
+                            backgroundColor: '#EC4899'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading charts:', error);
+            }
+        }
+        
+        // Load links
+        async function loadLinks() {
+            try {
+                console.log('🔵 loadLinks() called for username:', username);
+                const response = await fetch(`/api/users/${username}/links`);
+                console.log('📡 API response status:', response.status);
+                const links = await response.json();
+                console.log('📦 Links received:', links.length, 'links', links);
+                
+                const container = document.getElementById('sortable-links');
+                
+                if (links.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔗</div>
+                            <h3 style="margin-bottom: 8px;">No links yet</h3>
+                            <p>Click "Add New Link" or "Import from Linktree" to get started!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = links.map(link => {
+                    const platform = link.platform || 'website';
+                    const platformData = platformIcons[platform] || platformIcons.website;
+                    
+                    // Audio preview section - show if link has voice message
+                    // Use the full path for the audio source
+                    const audioPreview = link.voice_message_audio ? `
+                        <div style="grid-column: 1 / -1; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="display: flex; align-items: center; gap: 6px; color: var(--color-purple); font-weight: 600; font-size: 13px;">
+                                    <span style="color: #22c55e; font-size: 16px;">🎤</span>
+                                    Voice Message:
+                                </div>
+                                <audio controls style="flex: 1; height: 32px;">
+                                    <source src="/audio/${link.voice_message_audio}" type="audio/mpeg">
+                                </audio>
+                                <button class="btn-icon" onclick="event.stopPropagation(); regenerateVoiceForLink(${link.id})" title="Regenerate Voice">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    ` : `
+                        <div style="grid-column: 1 / -1; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border);">
+                            <button class="add-voice-btn" onclick="event.stopPropagation(); addVoiceToLink(${link.id}, event)" style="width: 100%;">
+                                <span>🎤</span>
+                                Add Voice Message
+                            </button>
+                        </div>
+                    `;
+                    
+                    return `
+                        <div class="link-card" data-id="${link.id}" style="display: grid; grid-template-columns: auto auto 1fr auto auto; align-items: center;">
+                            <div class="drag-handle">⋮⋮</div>
+                            <div class="link-icon" style="background: ${platformData.color};">
+                                ${platformData.icon}
+                            </div>
+                            <div class="link-info">
+                                <div class="link-title">${link.title}</div>
+                                <div class="link-url">${link.url}</div>
+                            </div>
+                            <div class="link-stats">
+                                <div class="link-stat">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    ${link.click_count || 0}
+                                </div>
+                            </div>
+                            <div class="link-actions">
+                                <button class="btn-icon" onclick="editLink(${link.id})" title="Edit">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </button>
+                                <button class="btn-icon delete" onclick="deleteLink(${link.id})" title="Delete">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            ${audioPreview}
+                        </div>
+                    `;
+                }).join('');
+                
+                // Initialize drag-and-drop
+                new Sortable(container, {
+                    animation: 150,
+                    handle: '.drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    onEnd: async function(evt) {
+                        const linkIds = Array.from(container.children).map(el => el.dataset.id);
+                        try {
+                            await fetch(`/api/users/${username}/links/reorder`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ link_ids: linkIds })
+                            });
+                        } catch (error) {
+                            console.error('Error reordering links:', error);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading links:', error);
+            }
+        }
+        
+        // Modal functions
+        // Voice Clone Modal
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordingStartTime = null;
+        let timerInterval = null;
+        
+        function showVoiceCloneModal() {
+            console.log('🎤 showVoiceCloneModal function called');
+            console.log('Opening voice clone modal...');
+            
+            const modal = document.getElementById('voice-clone-modal');
+            console.log('Voice clone modal element:', modal);
+            
+            if (!modal) {
+                console.error('❌ Voice clone modal not found!');
+                alert('Error: Voice clone modal not found');
+                return;
+            }
+            
+            modal.classList.add('active');
+            console.log('Modal classList after adding active:', modal.classList);
+            
+            // Reset modal state
+            document.getElementById('voice-clone-alert').innerHTML = '';
+            document.getElementById('recording-status').textContent = 'Ready to Record';
+            document.getElementById('recording-timer').style.display = 'none';
+            document.getElementById('start-recording-btn').style.display = 'inline-flex';
+            document.getElementById('stop-recording-btn').style.display = 'none';
+            document.getElementById('recording-playback').style.display = 'none';
+            
+            console.log('✅ Voice clone modal opened successfully');
+        }
+        
+        async function startRecording() {
+            console.log('🔴 Starting recording...');
+            
+            try {
+                // Request microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log('✅ Microphone access granted');
+                
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    console.log('📊 Audio data available:', event.data.size, 'bytes');
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    console.log('⏹️ Recording stopped');
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    document.getElementById('voice-clone-audio-preview').src = audioUrl;
+                    document.getElementById('recording-playback').style.display = 'block';
+                    
+                    console.log('✅ Audio preview ready');
+                };
+                
+                mediaRecorder.start();
+                recordingStartTime = Date.now();
+                
+                // Update UI
+                document.getElementById('recording-status').textContent = 'Recording...';
+                document.getElementById('recording-timer').style.display = 'block';
+                document.getElementById('start-recording-btn').style.display = 'none';
+                document.getElementById('stop-recording-btn').style.display = 'inline-flex';
+                
+                // Start timer
+                timerInterval = setInterval(updateRecordingTimer, 100);
+                
+                console.log('✅ Recording started successfully');
+            } catch (error) {
+                console.error('❌ Error accessing microphone:', error);
+                showAlert('voice-clone-alert', 'Error accessing microphone: ' + error.message, 'error');
+            }
+        }
+        
+        function updateRecordingTimer() {
+            if (!recordingStartTime) return;
+            
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('recording-timer').textContent = timeString;
+        }
+        
+        function stopRecording() {
+            console.log('⏹️ Stopping recording...');
+            
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                
+                // Stop all tracks
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                // Stop timer
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                
+                // Update UI
+                document.getElementById('recording-status').textContent = 'Recording Complete';
+                document.getElementById('start-recording-btn').style.display = 'inline-flex';
+                document.getElementById('stop-recording-btn').style.display = 'none';
+                
+                console.log('✅ Recording stopped successfully');
+            }
+        }
+        
+        async function uploadVoiceClone() {
+            console.log('📤 Uploading voice clone...');
+            
+            const btnText = document.getElementById('upload-voice-text');
+            const btnLoading = document.getElementById('upload-voice-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                if (audioChunks.length === 0) {
+                    throw new Error('No audio recorded');
+                }
+                
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const formData = new FormData();
+                formData.append('audio_sample', audioBlob, 'voice-sample.wav');
+                formData.append('username', username);
+                
+                console.log('📤 Sending audio to server...');
+                const response = await fetch('/api/voice/clone', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error('Upload failed: ' + errorText);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Voice clone uploaded successfully:', data);
+                
+                showAlert('voice-clone-alert', 'Voice clone created successfully! ElevenLabs is processing your voice...', 'success');
+                
+                setTimeout(() => {
+                    closeModal('voice-clone-modal');
+                    // Auto-reload voice clone status
+                    loadVoiceCloneStatus();
+                }, 2000);
+            } catch (error) {
+                console.error('❌ Error uploading voice clone:', error);
+                showAlert('voice-clone-alert', 'Error uploading voice clone: ' + error.message, 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        function showImportModal() {
+            console.log('🔵 showImportModal function called');
+            console.log('Opening import modal...');
+            
+            const modal = document.getElementById('import-modal');
+            console.log('Modal element:', modal);
+            
+            modal.classList.add('active');
+            console.log('Modal classList after adding active:', modal.classList);
+            
+            document.getElementById('import-alert').innerHTML = '';
+            document.getElementById('linktree-url').value = '';
+            
+            console.log('✅ Modal opened successfully');
+        }
+        
+        function showAddLinkModal() {
+            currentLinkId = null;
+            document.getElementById('link-modal-title').textContent = 'Add New Link';
+            document.getElementById('link-id').value = '';
+            document.getElementById('link-title').value = '';
+            document.getElementById('link-url').value = '';
+            document.getElementById('platform-preview').style.display = 'none';
+            document.getElementById('link-modal').classList.add('active');
+            document.getElementById('link-alert').innerHTML = '';
+        }
+        
+        async function editLink(linkId) {
+            try {
+                const response = await fetch(`/api/users/${username}/links`);
+                const links = await response.json();
+                const link = links.find(l => l.id === linkId);
+                
+                if (!link) return;
+                
+                currentLinkId = linkId;
+                document.getElementById('link-modal-title').textContent = 'Edit Link';
+                document.getElementById('link-id').value = linkId;
+                document.getElementById('link-title').value = link.title;
+                document.getElementById('link-url').value = link.url;
+                
+                detectPlatform();
+                
+                document.getElementById('link-modal').classList.add('active');
+                document.getElementById('link-alert').innerHTML = '';
+            } catch (error) {
+                console.error('Error loading link:', error);
+            }
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        // Platform detection
+        function detectPlatform() {
+            const url = document.getElementById('link-url').value.toLowerCase();
+            let platform = 'website';
+            
+            const patterns = {
+                instagram: /instagram\.com/,
+                facebook: /facebook\.com|fb\.com/,
+                twitter: /twitter\.com|x\.com/,
+                linkedin: /linkedin\.com/,
+                youtube: /youtube\.com|youtu\.be/,
+                tiktok: /tiktok\.com/,
+                spotify: /spotify\.com/,
+                'apple-music': /music\.apple\.com/,
+                soundcloud: /soundcloud\.com/,
+                twitch: /twitch\.tv/,
+                github: /github\.com/
+            };
+            
+            for (const [name, pattern] of Object.entries(patterns)) {
+                if (pattern.test(url)) {
+                    platform = name;
+                    break;
+                }
+            }
+            
+            const platformData = platformIcons[platform] || platformIcons.website;
+            document.getElementById('platform-icon-preview').innerHTML = platformData.icon;
+            document.getElementById('platform-icon-preview').style.background = platformData.color;
+            document.getElementById('platform-name-preview').textContent = platform.charAt(0).toUpperCase() + platform.slice(1).replace('-', ' ');
+            document.getElementById('platform-preview').style.display = url ? 'flex' : 'none';
+        }
+        
+        // Voice section
+        function toggleVoiceSection() {
+            const content = document.getElementById('voice-section-content');
+            const icon = document.getElementById('voice-toggle-icon');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+        
+        function updateCharCount() {
+            const text = document.getElementById('voice-text').value;
+            document.getElementById('voice-char-count').textContent = text.length;
+        }
+        
+        // NEW WORKFLOW: Generate 3 script options
+        async function generateScriptOptions() {
+            const linkId = document.getElementById('link-id').value;
+            if (!linkId) {
+                showAlert('link-alert', 'Please save the link first before generating scripts', 'error');
+                return;
+            }
+            
+            const btnText = document.getElementById('generate-scripts-text');
+            const btnLoading = document.getElementById('generate-scripts-loading');
+            
+            // Hide generate button, show loading
+            document.getElementById('voice-step-generate').style.display = 'none';
+            document.getElementById('voice-loading-states').style.display = 'block';
+            document.getElementById('loading-scanning').style.display = 'block';
+            
+            try {
+                // Step 1: Scanning
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Step 2: Writing
+                document.getElementById('loading-scanning').style.display = 'none';
+                document.getElementById('loading-writing').style.display = 'block';
+                
+                const response = await fetch(`/api/links/${linkId}/generate-scripts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to generate scripts');
+                }
+                
+                const data = await response.json();
+                
+                // Hide loading, show options
+                document.getElementById('voice-loading-states').style.display = 'none';
+                displayScriptOptions(data.scripts);
+                
+            } catch (error) {
+                console.error('Error generating scripts:', error);
+                showAlert('link-alert', 'Error generating scripts: ' + error.message, 'error');
+                // Reset UI
+                document.getElementById('voice-loading-states').style.display = 'none';
+                document.getElementById('voice-step-generate').style.display = 'block';
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        function displayScriptOptions(scripts) {
+            const container = document.getElementById('script-options-container');
+            
+            const labels = ['Direct & Benefit-Focused', 'Story/Personal Approach', 'Urgent/FOMO-Driven'];
+            
+            const scriptOptions = scripts.map((script, index) => `
+                <div style="background: white; padding: 20px; border-radius: var(--radius-lg); margin-bottom: 16px; border: 2px solid var(--color-border); cursor: pointer; transition: all 0.3s ease;" 
+                     onclick="selectScript(${index})" 
+                     id="script-option-${index}"
+                     onmouseover="this.style.borderColor='var(--color-purple)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'"
+                     onmouseout="this.style.borderColor='var(--color-border)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: var(--gradient-purple); color: white; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700;">Option ${index + 1}</span>
+                            <strong style="color: var(--color-dark); font-size: 15px;">${labels[index]}</strong>
+                        </div>
+                        <span style="font-size: 13px; color: var(--color-gray); font-weight: 600;">${script.word_count} words</span>
+                    </div>
+                    <p style="color: var(--color-dark); font-size: 15px; line-height: 1.7; margin: 0; padding: 12px; background: var(--color-light-gray); border-radius: 8px;">
+                        ${script.script}
+                    </p>
+                    <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; color: var(--color-purple); font-weight: 600; font-size: 14px;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Select this script
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add custom "Write Your Own" option as 4th card
+            const customOption = `
+                <div class="script-option-card" style="background: white; padding: 20px; border-radius: var(--radius-lg); margin-bottom: 16px; border: 2px solid var(--color-border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: var(--gradient-primary); color: white; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700;">✍️ Custom</span>
+                            <strong style="color: var(--color-dark); font-size: 15px;">Write Your Own</strong>
+                        </div>
+                    </div>
+                    <textarea id="custom-script-input" class="form-input" placeholder="Write your own 10-second script (50-70 words)..." rows="4" oninput="updateCustomWordCount()" style="margin-bottom: 8px; resize: vertical;"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="font-size: 13px; color: var(--color-gray);"><span id="custom-word-count">0</span> words</div>
+                    </div>
+                    <button type="button" onclick="selectCustomScript()" class="btn btn-primary" style="width: 100%;">Use This Script</button>
+                </div>
+            `;
+            
+            container.innerHTML = scriptOptions + customOption;
+            
+            document.getElementById('voice-script-options').style.display = 'block';
+            
+            // Store scripts globally for regeneration
+            window.currentScripts = scripts;
+        }
+        
+        function updateCustomWordCount() {
+            const textarea = document.getElementById('custom-script-input');
+            const wordCount = textarea.value.trim().split(/\s+/).filter(word => word.length > 0).length;
+            document.getElementById('custom-word-count').textContent = wordCount;
+        }
+        
+        function selectCustomScript() {
+            const customText = document.getElementById('custom-script-input').value.trim();
+            
+            if (!customText) {
+                showAlert('link-alert', 'Please write your custom script first', 'error');
+                return;
+            }
+            
+            const wordCount = customText.split(/\s+/).filter(word => word.length > 0).length;
+            
+            if (wordCount < 30) {
+                showAlert('link-alert', 'Your script is too short. Aim for 50-70 words for a 10-second read.', 'error');
+                return;
+            }
+            
+            if (wordCount > 90) {
+                showAlert('link-alert', 'Your script is too long. Aim for 50-70 words for a 10-second read.', 'error');
+                return;
+            }
+            
+            // Populate the main voice text field
+            document.getElementById('voice-text').value = customText;
+            updateCharCount();
+            
+            // Hide options, show selected script section
+            document.getElementById('voice-script-options').style.display = 'none';
+            document.getElementById('voice-selected-script').style.display = 'block';
+            
+            showAlert('link-alert', '✓ Custom script selected! Now record or generate AI voice.', 'success');
+        }
+        
+        function showCustomScriptInput() {
+            // Hide script options, show custom input
+            document.getElementById('voice-script-options').style.display = 'none';
+            
+            // Populate textarea with empty value
+            document.getElementById('voice-text').value = '';
+            updateCharCount();
+            
+            // Show selected script section with custom message
+            document.getElementById('voice-selected-script').style.display = 'block';
+            
+            // Update the header to indicate custom script
+            const header = document.querySelector('#voice-selected-script h4');
+            if (header) {
+                header.innerHTML = '✍️ Your Custom Script: <span style="font-size: 13px; color: var(--color-gray); font-weight: 500;">(Write your own 10-second intro, 50-70 words recommended)</span>';
+            }
+            
+            showAlert('link-alert', '✍️ Write your custom script below, then record or generate AI voice.', 'success');
+        }
+        
+        function selectScript(index) {
+            const script = window.currentScripts[index];
+            
+            // Populate textarea
+            document.getElementById('voice-text').value = script.script;
+            updateCharCount();
+            
+            // Hide options, show selected script section
+            document.getElementById('voice-script-options').style.display = 'none';
+            document.getElementById('voice-selected-script').style.display = 'block';
+            
+            showAlert('link-alert', '✓ Script selected! Edit if needed, then record or generate AI voice.', 'success');
+        }
+        
+        async function regenerateScriptOptions() {
+            // Just call generateScriptOptions again - it will generate new options
+            document.getElementById('voice-script-options').style.display = 'none';
+            document.getElementById('voice-step-generate').style.display = 'block';
+            await generateScriptOptions();
+        }
+        
+        // Placeholder functions for record and AI voice
+        function recordVoice() {
+            showAlert('link-alert', 'Voice recording feature coming soon! For now, use AI voice generation.', 'error');
+        }
+        
+        async function generateAIVoice() {
+            const text = document.getElementById('voice-text').value.trim();
+            if (!text) {
+                showAlert('link-alert', 'Please enter or select a script first', 'error');
+                return;
+            }
+            
+            const linkId = document.getElementById('link-id').value;
+            if (!linkId) {
+                showAlert('link-alert', 'Please save the link first', 'error');
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('text', text);
+                
+                const response = await fetch(`/api/links/${linkId}/generate-ai-voice`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to generate AI voice');
+                }
+                
+                const data = await response.json();
+                document.getElementById('audio-preview').src = `/audio/${data.audio_path}`;
+                document.getElementById('audio-preview-container').style.display = 'block';
+                showAlert('link-alert', 'AI voice generated successfully!', 'success');
+            } catch (error) {
+                showAlert('link-alert', 'Error: ' + error.message, 'error');
+            }
+        }
+        
+        function saveVoiceMessage() {
+            showAlert('link-alert', 'Voice message saved! Close this modal to continue.', 'success');
+            setTimeout(() => {
+                closeModal('link-modal');
+                loadLinks();
+            }, 1500);
+        }
+        
+        async function generateVoice() {
+            const text = document.getElementById('voice-text').value.trim();
+            if (!text) {
+                showAlert('link-alert', 'Please enter text for the voice message', 'error');
+                return;
+            }
+            
+            const btnText = document.getElementById('generate-voice-text');
+            const btnLoading = document.getElementById('generate-voice-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                const linkId = document.getElementById('link-id').value;
+                if (!linkId) {
+                    showAlert('link-alert', 'Please save the link first before generating voice', 'error');
+                    return;
+                }
+                
+                const response = await fetch(`/api/voice/generate-link/${username}/${linkId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                
+                if (!response.ok) throw new Error('Failed to generate voice');
+                
+                const data = await response.json();
+                document.getElementById('audio-preview').src = `/audio/${data.audio_path}`;
+                document.getElementById('audio-preview-container').style.display = 'block';
+                showAlert('link-alert', 'Voice generated successfully!', 'success');
+            } catch (error) {
+                showAlert('link-alert', 'Error generating voice: ' + error.message, 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        // Import Linktree
+        async function importLinktree(event) {
+            event.preventDefault();
+            
+            const url = document.getElementById('linktree-url').value.trim();
+            
+            const btnText = document.getElementById('import-btn-text');
+            const btnLoading = document.getElementById('import-btn-loading');
+            
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                const response = await fetch(`/api/users/${username}/import-linktree`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ linktree_url: url })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error('Failed to import links: ' + errorText);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Links imported successfully:', data);
+                showAlert('import-alert', data.message + ' - Starting onboarding wizard...', 'success');
+                
+                // Close import modal and show onboarding wizard
+                setTimeout(() => {
+                    closeModal('import-modal');
+                    
+                    // Show onboarding wizard after a short delay
+                    setTimeout(() => {
+                        console.log('🚀 Launching onboarding wizard...');
+                        showOnboardingWizard();
+                    }, 500);
+                }, 1500);
+            } catch (error) {
+                console.error('Error importing links:', error);
+                showAlert('import-alert', 'Error importing links: ' + error.message, 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    // Clear any JWT token from localStorage
+                    localStorage.removeItem('access_token');
+                    // Redirect to login page
+                    window.location.href = '/login';
+                } else {
+                    throw new Error('Failed to logout');
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
+                alert('Failed to logout. Please try again.');
+            }
+        }
+        
+        // Save link
+        async function saveLink(event) {
+            event.preventDefault();
+            
+            const linkId = document.getElementById('link-id').value;
+            const title = document.getElementById('link-title').value.trim();
+            const url = document.getElementById('link-url').value.trim();
+            const isNewLink = !linkId;
+            
+            const btnText = document.getElementById('save-link-text');
+            const btnLoading = document.getElementById('save-link-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                const method = linkId ? 'PUT' : 'POST';
+                const endpoint = linkId ? 
+                    `/api/users/${username}/links/${linkId}` : 
+                    `/api/users/${username}/links`;
+                
+                const response = await fetch(endpoint, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, url, description: null })
+                });
+                
+                if (!response.ok) throw new Error('Failed to save link');
+                
+                const savedLink = await response.json();
+                
+                showAlert('link-alert', 'Link saved successfully!', 'success');
+                
+                setTimeout(() => {
+                    closeModal('link-modal');
+                    // Reload links immediately after saving
+                    loadLinks();
+                    
+                    // If new link, ask if they want to add voice
+                    if (isNewLink && savedLink.id) {
+                        setTimeout(() => {
+                            promptAddVoiceForNewLink(savedLink.id, title);
+                        }, 800);
+                    }
+                }, 1500);
+            } catch (error) {
+                showAlert('link-alert', 'Error saving link: ' + error.message, 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        // Prompt to add voice for newly created link with custom modal
+        function promptAddVoiceForNewLink(linkId, linkTitle) {
+            // Create and show custom prompt modal
+            const modalHTML = `
+                <div id="voice-prompt-modal" class="modal active">
+                    <div class="modal-content" style="max-width: 500px; text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 16px;">🎤</div>
+                        <h2 style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 12px;">
+                            Add voice to this link?
+                        </h2>
+                        <p style="color: var(--color-gray); margin-bottom: 32px; font-size: 16px;">
+                            We can create a personalized voice message for<br><strong>"${linkTitle}"</strong>
+                        </p>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="closeVoicePrompt()" style="flex: 1;">
+                                Skip for Now
+                            </button>
+                            <button class="btn btn-primary" onclick="startVoiceFromPrompt(${linkId})" style="flex: 1;">
+                                🎙️ Generate Voice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Insert modal into body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function closeVoicePrompt() {
+            const modal = document.getElementById('voice-prompt-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function startVoiceFromPrompt(linkId) {
+            closeVoicePrompt();
+            addVoiceToLink(linkId);
+        }
+        
+        // Add voice to a specific link (opens wizard at Step 1 to generate scripts)
+        async function addVoiceToLink(linkId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            console.log(`🎤 Adding voice to link ${linkId}`);
+            
+            try {
+                // Load the specific link
+                const response = await fetch(`/api/users/${username}/links`);
+                const links = await response.json();
+                const link = links.find(l => l.id == linkId);
+                
+                if (!link) {
+                    alert('Link not found');
+                    return;
+                }
+                
+                // Set wizard to single-link mode
+                wizardLinks = [link];
+                wizardSingleLinkMode = true;
+                
+                // Show wizard modal
+                document.getElementById('onboarding-wizard').classList.add('active');
+                
+                // Start at Step 1 - let it generate scripts automatically
+                await startStep1GenerateScripts();
+                
+                console.log(`✅ Wizard opened for ${link.title}`);
+            } catch (error) {
+                console.error('Error preparing wizard:', error);
+                alert('Error preparing voice wizard: ' + error.message);
+            }
+        }
+        
+        // Regenerate voice for a link (from edit modal)
+        async function regenerateVoiceForLink(linkId) {
+            console.log(`🔄 Regenerating voice for link ${linkId}`);
+            
+            // Close the edit modal first
+            closeModal('link-modal');
+            
+            // Launch wizard for this link
+            try {
+                const response = await fetch(`/api/users/${username}/links`);
+                const links = await response.json();
+                const link = links.find(l => l.id == linkId);
+                
+                if (!link) {
+                    alert('Link not found');
+                    return;
+                }
+                
+                // Set wizard to single-link mode
+                wizardLinks = [link];
+                wizardSingleLinkMode = true;
+                
+                // Show wizard modal
+                document.getElementById('onboarding-wizard').classList.add('active');
+                
+                // Start at Step 1 to generate new scripts
+                await startStep1GenerateScripts();
+                
+                console.log(`✅ Regeneration wizard opened for ${link.title}`);
+            } catch (error) {
+                console.error('Error starting regeneration:', error);
+                alert('Error starting regeneration: ' + error.message);
+            }
+        }
+        
+        // Start voice onboarding for all links without voice
+        async function startVoiceOnboardingForAll() {
+            console.log('🚀 Starting voice onboarding for all links without voice');
+            
+            // Load user's links
+            const response = await fetch(`/api/users/${username}/links`);
+            const allLinks = await response.json();
+            
+            // Filter to only links without voice
+            wizardLinks = allLinks.filter(link => !link.voice_message_audio);
+            wizardSingleLinkMode = false;
+            
+            if (wizardLinks.length === 0) {
+                alert('All your links already have voice messages!');
+                return;
+            }
+            
+            // Show wizard modal
+            document.getElementById('onboarding-wizard').classList.add('active');
+            
+            // Start at Step 1
+            await startStep1GenerateScripts();
+        }
+        
+        // Toggle link active status
+        async function toggleLink(linkId) {
+            try {
+                await fetch(`/api/admin/${username}/links/${linkId}/toggle`, {
+                    method: 'PUT'
+                });
+            } catch (error) {
+                console.error('Error toggling link:', error);
+            }
+        }
+        
+        // Delete link
+        async function deleteLink(linkId) {
+            if (!confirm('Are you sure you want to delete this link?')) return;
+            
+            try {
+                await fetch(`/api/users/${username}/links/${linkId}`, {
+                    method: 'DELETE'
+                });
+                loadLinks();
+            } catch (error) {
+                console.error('Error deleting link:', error);
+                alert('Failed to delete link');
+            }
+        }
+        
+        // Upload avatar
+        async function uploadAvatar() {
+            const fileInput = document.getElementById('avatar-upload');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('avatar', file);
+            
+            try {
+                const response = await fetch(`/api/admin/${username}/upload-avatar`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error('Failed to upload avatar');
+                
+                const data = await response.json();
+                
+                // Update the preview image immediately
+                const previewDiv = document.getElementById('profile-photo-preview');
+                if (data.avatar_url) {
+                    previewDiv.innerHTML = `<img src="${data.avatar_url}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                }
+                
+                showProfileToast('Profile picture updated successfully!', 'success');
+            } catch (error) {
+                showProfileToast('Error uploading profile picture: ' + error.message, 'error');
+            }
+        }
+        
+        // Upload banner
+        async function uploadBanner() {
+            const fileInput = document.getElementById('banner-upload');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('banner', file);
+            
+            try {
+                const response = await fetch(`/api/admin/${username}/upload-banner`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error('Failed to upload banner');
+                
+                const data = await response.json();
+                alert('Banner image uploaded successfully!');
+                location.reload();
+            } catch (error) {
+                alert('Error uploading banner: ' + error.message);
+            }
+        }
+        
+        // Show profile toast message
+        function showProfileToast(message, type) {
+            const toast = document.getElementById('profile-save-toast');
+            toast.textContent = message;
+            toast.className = `alert alert-${type}`;
+            toast.style.display = 'block';
+            
+            // Auto-hide after 4 seconds
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+        
+        // Update profile
+        async function updateProfile(event) {
+            event.preventDefault();
+            
+            const displayName = document.getElementById('display-name').value.trim();
+            const bio = document.getElementById('bio').value.trim();
+            
+            const btnText = document.getElementById('save-profile-text');
+            const btnLoading = document.getElementById('save-profile-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                const formData = new FormData();
+                formData.append('display_name', displayName);
+                formData.append('bio', bio);
+                
+                const response = await fetch(`/api/admin/${username}/profile`, {
+                    method: 'PUT',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error('Failed to update profile');
+                
+                // Show success toast and stay on same page
+                showProfileToast('✓ Profile updated successfully!', 'success');
+            } catch (error) {
+                showProfileToast('Error updating profile: ' + error.message, 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        // Alert helper
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        // ====================
+        // ONBOARDING WIZARD FUNCTIONS
+        // ====================
+        
+        let wizardCurrentStep = 1;
+        let wizardLinks = [];
+        let wizardSelectedScripts = {};
+        let wizardMediaRecorder = null;
+        let wizardAudioChunks = [];
+        let wizardRecordingStartTime = null;
+        let wizardTimerInterval = null;
+        let wizardSingleLinkMode = false; // Track if we're doing a single link or batch
+        
+        // Show wizard after import
+        async function showOnboardingWizard() {
+            console.log('🎉 Starting onboarding wizard...');
+            
+            // Load user's links
+            const response = await fetch(`/api/users/${username}/links`);
+            wizardLinks = await response.json();
+            wizardSingleLinkMode = false;
+            
+            if (wizardLinks.length === 0) {
+                console.log('No links to onboard');
+                return;
+            }
+            
+            // Show wizard modal
+            document.getElementById('onboarding-wizard').classList.add('active');
+            
+            // Start Step 1: Generate scripts for all links
+            await startStep1GenerateScripts();
+        }
+        
+        // Step 1: Auto-generate scripts for all links
+        async function startStep1GenerateScripts() {
+            const linkCount = wizardLinks.length;
+            const linkText = wizardSingleLinkMode ? 'link' : 'links';
+            console.log(`📝 Step 1: Generating scripts for ${linkCount} ${linkText}`);
+            console.log('🔍 DEBUG - wizardLinks at start of Step 1:', wizardLinks);
+            
+            setWizardStep(1);
+            
+            const totalLinks = wizardLinks.length;
+            let processedLinks = 0;
+            
+            for (const link of wizardLinks) {
+                try {
+                    console.log(`🔵 DEBUG - Processing link: ${link.title} (ID: ${link.id})`);
+                    document.getElementById('step1-title').textContent = `Analyzing "${link.title}"...`;
+                    
+                    const response = await fetch(`/api/links/${link.id}/generate-scripts`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    console.log(`📡 DEBUG - API response status for ${link.title}:`, response.status);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(`📦 DEBUG - API response data for ${link.title}:`, data);
+                        console.log(`📝 DEBUG - Scripts received:`, data.scripts);
+                        
+                        link.scriptOptions = data.scripts;
+                        console.log(`✅ Generated scripts for: ${link.title}`);
+                        console.log(`🔍 DEBUG - link.scriptOptions after assignment:`, link.scriptOptions);
+                    } else {
+                        const errorText = await response.text();
+                        console.error(`❌ API error for ${link.title}:`, errorText);
+                    }
+                } catch (error) {
+                    console.error(`❌ Error generating scripts for ${link.title}:`, error);
+                }
+                
+                processedLinks++;
+                updateStep1Progress(processedLinks, totalLinks);
+                
+                // Small delay between requests
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            // All done, check final state before moving to step 2
+            console.log('🔍 DEBUG - Final wizardLinks state after Step 1:', wizardLinks);
+            console.log('🔍 DEBUG - Checking each link scriptOptions:');
+            wizardLinks.forEach((link, index) => {
+                console.log(`   Link ${index} (${link.title}):`, link.scriptOptions ? `${link.scriptOptions.length} scripts` : 'NO SCRIPTS');
+            });
+            
+            document.getElementById('step1-icon').textContent = '✅';
+            document.getElementById('step1-title').textContent = wizardSingleLinkMode ? 'Scripts Generated!' : 'All Scripts Generated!';
+            document.getElementById('step1-subtitle').textContent = 'Ready to select your favorites';
+            
+            setTimeout(() => {
+                setWizardStep(2);
+                loadStep2ScriptSelection();
+            }, 1500);
+        }
+        
+        function updateStep1Progress(current, total) {
+            const percentage = (current / total) * 100;
+            document.getElementById('step1-progress-bar').style.width = percentage + '%';
+            document.getElementById('step1-progress-text').textContent = `${current} of ${total} links processed`;
+        }
+        
+        // Step 2: Script Selection
+        function loadStep2ScriptSelection() {
+            console.log('📋 Step 2: Loading script selection grid');
+            console.log('🔍 DEBUG - wizardLinks in Step 2:', wizardLinks);
+            console.log('🔍 DEBUG - Number of links:', wizardLinks.length);
+            
+            wizardLinks.forEach((link, index) => {
+                console.log(`🔍 DEBUG - Link ${index}:`, {
+                    id: link.id,
+                    title: link.title,
+                    hasScriptOptions: !!link.scriptOptions,
+                    scriptOptionsCount: link.scriptOptions ? link.scriptOptions.length : 0,
+                    scriptOptions: link.scriptOptions
+                });
+            });
+            
+            const container = document.getElementById('script-selection-grid');
+            console.log('🔍 DEBUG - Container element:', container);
+            
+            if (!container) {
+                console.error('❌ ERROR - script-selection-grid container not found!');
+                return;
+            }
+            
+            container.innerHTML = wizardLinks.map((link, linkIndex) => {
+                const platform = link.platform || 'website';
+                const platformData = platformIcons[platform] || platformIcons.website;
+                
+                const scriptOptionsArray = link.scriptOptions || [];
+                console.log(`🔍 DEBUG - Link ${linkIndex} (${link.title}) scriptOptions:`, scriptOptionsArray);
+                
+                const scriptsHTML = scriptOptionsArray.map((script, scriptIndex) => {
+                    console.log(`   📝 Script ${scriptIndex}:`, script);
+                    return `
+                        <div class="script-option-card" onclick="selectWizardScript(${linkIndex}, ${scriptIndex})" id="wizard-script-${linkIndex}-${scriptIndex}">
+                            <div class="script-option-header">
+                                <div class="script-option-badge">📝 ${scriptIndex === 0 ? 'Brief' : scriptIndex === 1 ? 'Standard' : 'Conversational'}</div>
+                                <span class="script-option-stats">${script.word_count} words</span>
+                            </div>
+                            <div class="script-option-text">${script.script}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Add custom script option
+                const customScriptHTML = `
+                    <div style="background: white; padding: 16px; border-radius: var(--radius-md); border: 2px solid var(--color-border); margin-top: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <span style="background: var(--gradient-primary); color: white; padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;">✍️ Custom</span>
+                            <strong style="color: var(--color-dark); font-size: 14px;">Write Your Own</strong>
+                        </div>
+                        <textarea id="custom-script-${linkIndex}" class="form-input" placeholder="Write your custom script (50-70 words recommended)..." rows="3" style="font-size: 13px; margin-bottom: 8px;"></textarea>
+                        <button onclick="selectCustomWizardScript(${linkIndex})" class="btn btn-primary" style="width: 100%; padding: 8px; font-size: 13px;">Use This Script</button>
+                    </div>
+                `;
+                
+                console.log(`🔍 DEBUG - Generated ${scriptOptionsArray.length} script cards for ${link.title}`);
+                
+                const linkCardHTML = `
+                    <div class="script-link-card" id="wizard-link-${linkIndex}">
+                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                            <div class="link-icon" style="background: ${platformData.color}; width: 40px; height: 40px;">
+                                ${platformData.icon}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; color: var(--color-dark); margin-bottom: 4px;">${link.title}</div>
+                                <div style="font-size: 13px; color: var(--color-gray); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${link.url}</div>
+                            </div>
+                        </div>
+                        ${scriptsHTML || '<div style="padding: 20px; text-align: center; color: var(--color-gray);">⚠️ No scripts generated for this link</div>'}
+                        ${customScriptHTML}
+                    </div>
+                `;
+                console.log(`🔍 DEBUG - Generated card HTML for ${link.title}`);
+                return linkCardHTML;
+            }).join('');
+            
+            console.log('✅ DEBUG - Step 2 HTML generation complete');
+            console.log('🔍 DEBUG - Final container HTML length:', container.innerHTML.length);
+        }
+        
+        function selectWizardScript(linkIndex, scriptIndex) {
+            const link = wizardLinks[linkIndex];
+            
+            // Remove selection from all scripts for this link
+            for (let i = 0; i < 3; i++) {
+                const card = document.getElementById(`wizard-script-${linkIndex}-${i}`);
+                if (card) card.classList.remove('selected');
+            }
+            
+            // Add selection to clicked script
+            const selectedCard = document.getElementById(`wizard-script-${linkIndex}-${scriptIndex}`);
+            selectedCard.classList.add('selected');
+            
+            // Store selection
+            wizardSelectedScripts[link.id] = {
+                script: link.scriptOptions[scriptIndex].script,
+                scriptIndex: scriptIndex
+            };
+            
+            console.log(`✅ Selected script ${scriptIndex + 1} for ${link.title}`);
+        }
+        
+        function selectCustomWizardScript(linkIndex) {
+            const link = wizardLinks[linkIndex];
+            const textarea = document.getElementById(`custom-script-${linkIndex}`);
+            const customScript = textarea.value.trim();
+            
+            if (!customScript) {
+                alert('Please write your custom script first');
+                return;
+            }
+            
+            const wordCount = customScript.split(/\s+/).filter(word => word.length > 0).length;
+            
+            if (wordCount < 30) {
+                alert('Your script is too short. Aim for 50-70 words for a 10-second read.');
+                return;
+            }
+            
+            if (wordCount > 90) {
+                alert('Your script is too long. Aim for 50-70 words for a 10-second read.');
+                return;
+            }
+            
+            // Remove selection from preset scripts
+            for (let i = 0; i < 3; i++) {
+                const card = document.getElementById(`wizard-script-${linkIndex}-${i}`);
+                if (card) card.classList.remove('selected');
+            }
+            
+            // Store custom script selection
+            wizardSelectedScripts[link.id] = {
+                script: customScript,
+                scriptIndex: -1 // -1 indicates custom script
+            };
+            
+            // Visual feedback
+            textarea.style.borderColor = 'var(--color-purple)';
+            textarea.style.background = 'rgba(124, 58, 237, 0.05)';
+            
+            console.log(`✅ Selected custom script for ${link.title}`);
+        }
+        
+        // Step 3: Voice Recording
+        async function startWizardRecording() {
+            console.log('🔴 Starting wizard voice recording...');
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                wizardMediaRecorder = new MediaRecorder(stream);
+                wizardAudioChunks = [];
+                
+                wizardMediaRecorder.ondataavailable = (event) => {
+                    wizardAudioChunks.push(event.data);
+                };
+                
+                wizardMediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(wizardAudioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    document.getElementById('wizard-voice-preview').src = audioUrl;
+                    document.getElementById('wizard-recording-playback').style.display = 'block';
+                };
+                
+                wizardMediaRecorder.start();
+                wizardRecordingStartTime = Date.now();
+                
+                // Update UI
+                document.getElementById('wizard-recording-status').textContent = 'Recording...';
+                document.getElementById('wizard-recording-timer').style.display = 'block';
+                document.getElementById('wizard-start-recording-btn').style.display = 'none';
+                document.getElementById('wizard-stop-recording-btn').style.display = 'inline-flex';
+                
+                // Start timer
+                wizardTimerInterval = setInterval(updateWizardRecordingTimer, 100);
+                
+                console.log('✅ Wizard recording started');
+            } catch (error) {
+                console.error('❌ Error accessing microphone:', error);
+                alert('Error accessing microphone: ' + error.message);
+            }
+        }
+        
+        function updateWizardRecordingTimer() {
+            if (!wizardRecordingStartTime) return;
+            
+            const elapsed = Math.floor((Date.now() - wizardRecordingStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            document.getElementById('wizard-recording-timer').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        function stopWizardRecording() {
+            if (wizardMediaRecorder && wizardMediaRecorder.state === 'recording') {
+                wizardMediaRecorder.stop();
+                wizardMediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                if (wizardTimerInterval) {
+                    clearInterval(wizardTimerInterval);
+                    wizardTimerInterval = null;
+                }
+                
+                document.getElementById('wizard-recording-status').textContent = 'Recording Complete';
+                document.getElementById('wizard-start-recording-btn').style.display = 'inline-flex';
+                document.getElementById('wizard-stop-recording-btn').style.display = 'none';
+                
+                console.log('✅ Wizard recording stopped');
+            }
+        }
+        
+        function updateStep3ForNewClone() {
+            // User doesn't have voice clone yet
+            document.getElementById('step3-title').textContent = "First, let's clone your voice";
+            document.getElementById('step3-subtitle').textContent = "(one-time setup)";
+            document.getElementById('step3-skip-btn').textContent = "Skip for Now →";
+        }
+        
+        function updateStep3ForExistingClone() {
+            // User already has voice clone
+            document.getElementById('step3-title').textContent = "Your voice is ready!";
+            document.getElementById('step3-subtitle').textContent = "You already have a voice clone";
+            document.getElementById('step3-skip-btn').textContent = "Continue to Audio Generation →";
+            
+            // Hide recording interface, show success message
+            document.getElementById('wizard-recording-status').textContent = '✓ Voice clone already created';
+            document.getElementById('wizard-recording-timer').style.display = 'none';
+            document.getElementById('wizard-recording-controls').style.display = 'none';
+            document.getElementById('wizard-recording-playback').style.display = 'none';
+        }
+        
+        async function uploadWizardVoiceClone() {
+            console.log('📤 Uploading wizard voice clone...');
+            
+            const btnText = document.getElementById('wizard-upload-voice-text');
+            const btnLoading = document.getElementById('wizard-upload-voice-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                if (wizardAudioChunks.length === 0) {
+                    throw new Error('No audio recorded');
+                }
+                
+                const audioBlob = new Blob(wizardAudioChunks, { type: 'audio/wav' });
+                const formData = new FormData();
+                formData.append('audio_sample', audioBlob, 'voice-sample.wav');
+                formData.append('username', username);
+                
+                console.log('📤 Sending audio to /api/voice/clone...');
+                console.log('Audio blob size:', audioBlob.size, 'bytes');
+                console.log('Username:', username);
+                
+                const response = await fetch('/api/voice/clone', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Server error:', errorText);
+                    throw new Error('Upload failed: ' + errorText);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Voice clone uploaded successfully:', data);
+                
+                // Show success message and auto-advance
+                document.getElementById('wizard-recording-status').textContent = '✓ Voice clone created successfully!';
+                
+                // Move to step 4 after a short delay
+                setTimeout(() => {
+                    setWizardStep(4);
+                    startStep4GenerateAudio();
+                }, 1500);
+            } catch (error) {
+                console.error('❌ Error uploading voice clone:', error);
+                alert('Error uploading voice clone: ' + error.message);
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        async function skipVoiceClone() {
+            console.log('⏭️ Proceeding to audio generation');
+            
+            // Check if user has a voice clone
+            try {
+                const response = await fetch(`/api/voice/check-clone/${username}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (!data.has_clone) {
+                        console.log('⚠️ User skipped voice clone - will use default voice');
+                    } else {
+                        console.log('✅ User has voice clone, proceeding to audio generation');
+                    }
+                }
+            } catch (error) {
+                console.log('Could not check voice clone status');
+            }
+            
+            setWizardStep(4);
+            startStep4GenerateAudio();
+        }
+        
+        // Step 4: Generate Audio
+        async function startStep4GenerateAudio() {
+            console.log('🎙️ Step 4: Generating audio for selected links');
+            
+            const linksWithScripts = Object.keys(wizardSelectedScripts);
+            const totalLinks = linksWithScripts.length;
+            let processedLinks = 0;
+            
+            if (totalLinks === 0) {
+                console.log('No scripts selected, skipping audio generation');
+                
+                // If in single link mode, close wizard
+                if (wizardSingleLinkMode) {
+                    alert('Please select a script first');
+                    setWizardStep(2);
+                    return;
+                }
+                
+                setTimeout(() => {
+                    setWizardStep(5);
+                    loadStep5Preview();
+                }, 1000);
+                return;
+            }
+            
+            const audioItems = document.getElementById('audio-preview-items');
+            audioItems.innerHTML = '';
+            
+            for (const linkId of linksWithScripts) {
+                try {
+                    const scriptData = wizardSelectedScripts[linkId];
+                    const link = wizardLinks.find(l => l.id == linkId);
+                    
+                    // Select the script first
+                    await fetch(`/api/links/${linkId}/select-script`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            script: scriptData.script,
+                            script_index: scriptData.scriptIndex 
+                        })
+                    });
+                    
+                    // Generate audio
+                    const formData = new FormData();
+                    formData.append('text', scriptData.script);
+                    
+                    const response = await fetch(`/api/links/${linkId}/generate-audio`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Add audio preview
+                        const audioItem = document.createElement('div');
+                        audioItem.className = 'audio-preview-item';
+                        audioItem.innerHTML = `
+                            <div style="flex: 0 0 auto;">
+                                <div style="font-weight: 600; color: var(--color-dark);">${link.title}</div>
+                            </div>
+                            <audio controls style="flex: 1;">
+                                <source src="/audio/${data.audio_path}" type="audio/mpeg">
+                            </audio>
+                        `;
+                        audioItems.appendChild(audioItem);
+                        
+                        console.log(`✅ Generated audio for: ${link.title}`);
+                    }
+                } catch (error) {
+                    console.error(`Error generating audio for link ${linkId}:`, error);
+                }
+                
+                processedLinks++;
+                updateStep4Progress(processedLinks, totalLinks);
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // Show audio previews
+            document.getElementById('audio-preview-list').style.display = 'block';
+            
+            // If single link mode, close wizard and force page reload to show updated audio
+            if (wizardSingleLinkMode) {
+                const linkId = linksWithScripts[0]; // Get the link ID we just processed
+                
+                // Verify the audio was saved to database before reloading
+                setTimeout(async () => {
+                    closeOnboardingWizard();
+                    
+                    console.log('🔍 Verifying audio was saved for link', linkId);
+                    
+                    // Verify link has audio in database
+                    try {
+                        const response = await fetch(`/api/users/${username}/links`);
+                        const links = await response.json();
+                        const updatedLink = links.find(l => l.id == linkId);
+                        
+                        if (updatedLink && updatedLink.voice_message_audio) {
+                            console.log('✅ Verified audio saved:', updatedLink.voice_message_audio);
+                            
+                            // Store flag to show Links section after reload
+                            localStorage.setItem('justGeneratedAudio', linkId);
+                            
+                            // Show success message
+                            alert('✅ Voice message generated successfully! Reloading to show your link...');
+                            
+                            // Reload page to Links section
+                            setTimeout(() => {
+                                window.location.reload(true);
+                            }, 500);
+                        } else {
+                            console.error('❌ Audio not found in database for link', linkId);
+                            alert('Voice generated but not showing yet. Please click Manage Links to see it.');
+                            // Still try to reload to Links section
+                            localStorage.setItem('justGeneratedAudio', linkId);
+                            setTimeout(() => {
+                                window.location.reload(true);
+                            }, 500);
+                        }
+                    } catch (error) {
+                        console.error('Error verifying audio:', error);
+                        alert('Voice generated! Click Manage Links in the sidebar to see your audio.');
+                        localStorage.setItem('justGeneratedAudio', linkId);
+                        setTimeout(() => {
+                            window.location.reload(true);
+                        }, 500);
+                    }
+                }, 2000); // Wait 2 seconds for audio generation to complete
+            } else {
+                // Auto-advance to step 5 after 2 seconds for batch mode
+                setTimeout(() => {
+                    setWizardStep(5);
+                    loadStep5Preview();
+                }, 2000);
+            }
+        }
+        
+        function updateStep4Progress(current, total) {
+            const percentage = (current / total) * 100;
+            document.getElementById('step4-progress-bar').style.width = percentage + '%';
+            document.getElementById('step4-progress-text').textContent = `${current} of ${total} audio files generated`;
+        }
+        
+        // Step 5: Preview & Publish
+        async function loadStep5Preview() {
+            console.log('🎉 Step 5: Loading profile preview');
+            
+            const previewContainer = document.getElementById('profile-preview-content');
+            
+            try {
+                // Load fresh links data
+                const response = await fetch(`/api/users/${username}/links`);
+                const links = await response.json();
+                
+                previewContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h3 style="font-weight: 700; margin-bottom: 8px;">@${username}</h3>
+                        <p style="color: var(--color-gray); margin-bottom: 16px;">${links.length} links ready with voice messages</p>
+                    </div>
+                    ${links.slice(0, 3).map(link => {
+                        const platform = link.platform || 'website';
+                        const platformData = platformIcons[platform] || platformIcons.website;
+                        
+                        return `
+                            <div style="background: white; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+                                <div class="link-icon" style="background: ${platformData.color}; width: 32px; height: 32px; font-size: 16px;">
+                                    ${platformData.icon}
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="font-weight: 600; font-size: 14px;">${link.title}</div>
+                                </div>
+                                ${link.voice_message_audio ? '🎤' : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                    ${links.length > 3 ? `<div style="text-align: center; color: var(--color-gray); font-size: 13px;">+ ${links.length - 3} more links</div>` : ''}
+                `;
+            } catch (error) {
+                console.error('Error loading preview:', error);
+                previewContainer.innerHTML = '<p style="color: var(--color-gray);">Error loading preview</p>';
+            }
+        }
+        
+        async function publishProfile() {
+            console.log('🚀 Publishing profile...');
+            
+            const btnText = document.getElementById('publish-btn-text');
+            const btnLoading = document.getElementById('publish-btn-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                const response = await fetch(`/api/profile/${username}/publish`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to publish profile');
+                }
+                
+                console.log('✅ Profile published successfully!');
+                
+                // Close wizard and redirect
+                setTimeout(() => {
+                    closeOnboardingWizard();
+                    window.location.href = `/${username}`;
+                }, 1000);
+            } catch (error) {
+                console.error('❌ Error publishing profile:', error);
+                alert('Error publishing profile: ' + error.message);
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        // Wizard Navigation
+        function setWizardStep(stepNumber) {
+            wizardCurrentStep = stepNumber;
+            
+            // Update stepper
+            document.querySelectorAll('.wizard-step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum === stepNumber) {
+                    step.classList.add('active');
+                } else if (stepNum < stepNumber) {
+                    step.classList.add('completed');
+                }
+            });
+            
+            // Update content
+            document.querySelectorAll('.wizard-step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index + 1 === stepNumber) {
+                    content.classList.add('active');
+                }
+            });
+            
+            console.log(`📍 Wizard step ${stepNumber} active`);
+        }
+        
+        async function nextWizardStep() {
+            if (wizardCurrentStep < 5) {
+                if (wizardCurrentStep === 2) {
+                    // Moving from script selection to voice clone/audio generation
+                    const selectedCount = Object.keys(wizardSelectedScripts).length;
+                    if (selectedCount === 0) {
+                        alert('Please select at least one script to continue');
+                        return;
+                    }
+                    
+                    // Check if user already has a voice clone
+                    try {
+                        const response = await fetch(`/api/voice/check-clone/${username}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.has_clone) {
+                                console.log('✅ User has voice clone, skipping Step 3 and going to Step 4');
+                                // User has voice clone - skip recording and go straight to audio generation
+                                setWizardStep(4);
+                                startStep4GenerateAudio();
+                                return;
+                            }
+                        }
+                    } catch (error) {
+                        console.log('Could not check voice clone status, showing recording step');
+                    }
+                    
+                    // User doesn't have voice clone, show recording step with setup message
+                    setWizardStep(3);
+                    updateStep3ForNewClone();
+                } else {
+                    setWizardStep(wizardCurrentStep + 1);
+                }
+            }
+        }
+        
+        function previousWizardStep() {
+            if (wizardCurrentStep > 1) {
+                setWizardStep(wizardCurrentStep - 1);
+            }
+        }
+        
+        function closeOnboardingWizard() {
+            document.getElementById('onboarding-wizard').classList.remove('active');
+            wizardCurrentStep = 1;
+            wizardLinks = [];
+            wizardSelectedScripts = {};
+            wizardSingleLinkMode = false;
+            
+            // Refresh links view after a short delay to ensure backend processing is complete
+            setTimeout(() => {
+                loadLinks();
+            }, 500);
+        }
+        
+        // Copy modal script to clipboard (for standalone voice clone modal)
+        function copyModalScriptToClipboard(event) {
+            const scriptText = document.getElementById('modal-script-display').textContent;
+            
+            // Use the Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(scriptText).then(() => {
+                    // Show temporary success message
+                    const btn = event.currentTarget;
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ Copied!';
+                    btn.style.background = 'var(--color-purple)';
+                    btn.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'var(--color-light-gray)';
+                        btn.style.color = 'var(--color-dark)';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    alert('Failed to copy to clipboard');
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = scriptText;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    const btn = event.currentTarget;
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ Copied!';
+                    btn.style.background = 'var(--color-purple)';
+                    btn.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'var(--color-light-gray)';
+                        btn.style.color = 'var(--color-dark)';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                    alert('Failed to copy to clipboard');
+                }
+                
+                document.body.removeChild(textArea);
+            }
+        }
+        
+        // Copy script to clipboard (for wizard)
+        function copyScriptToClipboard(event) {
+            const scriptText = document.getElementById('recording-script-display').textContent;
+            
+            // Use the Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(scriptText).then(() => {
+                    // Show temporary success message
+                    const btn = event.currentTarget;
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ Copied!';
+                    btn.style.background = 'var(--color-purple)';
+                    btn.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'var(--color-light-gray)';
+                        btn.style.color = 'var(--color-dark)';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    alert('Failed to copy to clipboard');
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = scriptText;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    const btn = event.currentTarget;
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ Copied!';
+                    btn.style.background = 'var(--color-purple)';
+                    btn.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'var(--color-light-gray)';
+                        btn.style.color = 'var(--color-dark)';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                    alert('Failed to copy to clipboard');
+                }
+                
+                document.body.removeChild(textArea);
+            }
+        }
+        
+        // Load voice clone status
+        async function loadVoiceCloneStatus() {
+            console.log('🔍 Loading voice clone status for:', username);
+            
+            const loadingDiv = document.getElementById('voice-clone-loading');
+            const noneDiv = document.getElementById('voice-clone-none');
+            const existsDiv = document.getElementById('voice-clone-exists');
+            const previewDiv = document.getElementById('voice-sample-preview');
+            const audioEl = document.getElementById('voice-sample-audio');
+            
+            try {
+                const response = await fetch(`/api/voice/check-clone/${username}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to check voice clone status');
+                }
+                
+                const data = await response.json();
+                console.log('✅ Voice clone status:', data);
+                
+                // Hide loading
+                loadingDiv.style.display = 'none';
+                
+                if (data.has_clone) {
+                    // Show "exists" card
+                    existsDiv.style.display = 'block';
+                    noneDiv.style.display = 'none';
+                    
+                    // If we have a sample path, show the audio preview
+                    if (data.voice_sample_path) {
+                        audioEl.src = `/audio/${data.voice_sample_path}`;
+                        previewDiv.style.display = 'block';
+                    }
+                } else {
+                    // Show "none" card
+                    noneDiv.style.display = 'block';
+                    existsDiv.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('❌ Error loading voice clone status:', error);
+                loadingDiv.style.display = 'none';
+                noneDiv.style.display = 'block';
+            }
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we just generated audio for a link
+            const justGeneratedAudio = localStorage.getItem('justGeneratedAudio');
+            
+            if (justGeneratedAudio) {
+                // Switch to Links section to show the newly generated audio
+                console.log('🎉 Just generated audio for link', justGeneratedAudio, '- switching to Links section');
+                
+                // Remove the flag
+                localStorage.removeItem('justGeneratedAudio');
+                
+                // Switch to links section
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                document.querySelector('.nav-item[onclick*="links"]').classList.add('active');
+                
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('links-section').classList.add('active');
+                document.getElementById('page-title').textContent = 'Manage Links';
+                
+                // Load links
+                loadLinks();
+            } else {
+                // Normal flow - load analytics
+                loadAnalytics();
+            }
+            
+            // Load voice clone status when page loads
+            loadVoiceCloneStatus();
+            // Also load links to ensure fresh data after any updates
+            loadLinks();
+        });
+    </script>
+</body>
+</html>

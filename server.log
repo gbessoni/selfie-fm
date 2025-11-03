@@ -1,0 +1,277 @@
+INFO:     Will watch for changes in these directories: ['/Users/gregbessoni/ai-code-platform/voicetree/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [36144] using WatchFiles
+/Users/gregbessoni/ai-code-platform/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2025-11-03 10:38:35,477 - script_writer - INFO - Using OpenAI for script generation
+INFO:     Started server process [36146]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ ElevenLabs API key loaded: sk_154f813...
+============================================================
+🚀 Selfie.fm Server Started
+============================================================
+✅ Anthropic key: Found
+✅ ElevenLabs key: Found
+📍 Running on: http://localhost:8000
+============================================================
+INFO:     127.0.0.1:62544 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+2025-11-03 10:38:37,907 - app - INFO - Starting script generation for link 27: https://jtxcode.gumroad.com/l/redditbot
+2025-11-03 10:38:37,907 - app - INFO - Using cached content for link 27
+2025-11-03 10:38:37,907 - app - INFO - Generating 3 script variations for link 27
+2025-11-03 10:38:37,907 - script_writer - INFO - Generating multiple scripts with OpenAI
+2025-11-03 10:38:37,933 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.openai.com:443
+2025-11-03 10:38:42,158 - urllib3.connectionpool - DEBUG - https://api.openai.com:443 "POST /v1/chat/completions HTTP/1.1" 200 None
+2025-11-03 10:38:42,164 - script_writer - INFO - Generated scripts response: SCRIPT 1:  
+Imagine waking up to new clients, all while you slept. With our Reddit DM Bot, you can effortlessly connect with people actively seeking your services. No more cold outreach. Transform you...
+2025-11-03 10:38:42,166 - script_writer - INFO - Parsed 3 scripts successfully
+2025-11-03 10:38:42,167 - app - INFO - Successfully generated scripts for link 27
+🔵 Generating scripts for link 27
+✅ Found link: Reddit DM Bot - Automate messages in minutes - https://jtxcode.gumroad.com/l/redditbot
+✅ Found user: jtxcode
+📋 Using cached content for link 27
+✍️ Generating 3 script variations for link 27
+✅ Scripts generated successfully
+✅ Scripts saved to database
+✅ Returning 3 scripts
+INFO:     127.0.0.1:62546 - "POST /api/links/27/generate-scripts HTTP/1.1" 200 OK
+2025-11-03 10:38:42,201 - app - INFO - Script selected for link 27: 261 characters
+INFO:     127.0.0.1:62554 - "POST /api/links/27/select-script HTTP/1.1" 200 OK
+2025-11-03 10:38:42,207 - app - INFO - Generating audio for link 27 with voice Iyt2cLJMX7xVv3EPhpOf
+2025-11-03 10:38:42,249 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.elevenlabs.io:443
+2025-11-03 10:38:45,819 - urllib3.connectionpool - DEBUG - https://api.elevenlabs.io:443 "POST /v1/text-to-speech/Iyt2cLJMX7xVv3EPhpOf HTTP/1.1" 200 None
+2025-11-03 10:38:45,895 - app - INFO - Audio generated successfully for link 27: link_27_1762184322.207493.mp3
+✓ Audio generated successfully: /Users/gregbessoni/ai-code-platform/voicetree/backend/audio/link_voices/link_27_1762184322.207493.mp3
+INFO:     127.0.0.1:62556 - "POST /api/links/27/generate-audio HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62560 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63199 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63200 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63202 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63199 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63199 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63202 - "GET /audio/voice_samples/jtxcode_sample_1762177399.343612.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63200 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63200 - "GET /api/admin/jtxcode/clicks-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63200 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63200 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63209 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+2025-11-03 10:49:39,128 - app - INFO - Starting script generation for link 27: https://jtxcode.gumroad.com/l/redditbot
+2025-11-03 10:49:39,128 - app - INFO - Using cached content for link 27
+2025-11-03 10:49:39,128 - app - INFO - Generating 3 script variations for link 27
+2025-11-03 10:49:39,128 - script_writer - INFO - Generating multiple scripts with OpenAI
+2025-11-03 10:49:39,154 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.openai.com:443
+2025-11-03 10:49:45,470 - urllib3.connectionpool - DEBUG - https://api.openai.com:443 "POST /v1/chat/completions HTTP/1.1" 200 None
+2025-11-03 10:49:45,474 - script_writer - INFO - Generated scripts response: SCRIPT 1:  
+Imagine waking up to new clients while you slept. The Reddit DM Bot does just that. It finds people actively seeking your skills and sends them your offer—while you dream. Stop chasing lea...
+2025-11-03 10:49:45,477 - script_writer - INFO - Parsed 3 scripts successfully
+2025-11-03 10:49:45,478 - app - INFO - Successfully generated scripts for link 27
+🔵 Generating scripts for link 27
+✅ Found link: Reddit DM Bot - Automate messages in minutes - https://jtxcode.gumroad.com/l/redditbot
+✅ Found user: jtxcode
+📋 Using cached content for link 27
+✍️ Generating 3 script variations for link 27
+✅ Scripts generated successfully
+✅ Scripts saved to database
+✅ Returning 3 scripts
+INFO:     127.0.0.1:63209 - "POST /api/links/27/generate-scripts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63216 - "GET /preview/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63213 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63213 - "GET /audio/link_27_1762184322.207493.mp3 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63252 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63259 - "GET /preview/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63259 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63259 - "GET /uploads/avatars/jtxcode_avatar_1762031905.766142.webp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63259 - "GET /audio/link_27_1762184322.207493.mp3 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63543 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63545 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63543 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63547 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63547 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63547 - "GET /audio/voice_samples/jtxcode_sample_1762177399.343612.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63543 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63543 - "GET /api/admin/jtxcode/clicks-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63543 - "POST /api/auth/logout HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63543 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63550 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63583 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63587 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63587 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "GET /api/admin/jtxcode/clicks-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63590 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63590 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63595 - "GET /preview/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63613 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63672 - "PUT /api/users/jtxcode/publish HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63672 - "GET /jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63672 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63678 - "POST /api/clicks/jtxcode/27 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63684 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63678 - "POST /api/track/voice-play/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63716 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63728 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63730 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63730 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "GET /api/admin/jtxcode/clicks-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63734 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63738 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+2025-11-03 11:01:40,833 - app - INFO - Starting script generation for link 29: https://www.youtube.com/@Jtxcode
+2025-11-03 11:01:40,834 - app - INFO - Using cached content for link 29
+2025-11-03 11:01:40,834 - app - INFO - Generating 3 script variations for link 29
+2025-11-03 11:01:40,834 - script_writer - INFO - Generating multiple scripts with OpenAI
+2025-11-03 11:01:40,910 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.openai.com:443
+2025-11-03 11:01:47,187 - urllib3.connectionpool - DEBUG - https://api.openai.com:443 "POST /v1/chat/completions HTTP/1.1" 200 None
+2025-11-03 11:01:47,209 - script_writer - INFO - Generated scripts response: SCRIPT 1:  
+Imagine waking up each day free from the 9-to-5 grind. I built a job bot that earned me over $400, and it transformed my life. You can escape too. Don’t let fear hold you back. Join me at ...
+2025-11-03 11:01:47,214 - script_writer - INFO - Parsed 3 scripts successfully
+2025-11-03 11:01:47,216 - app - INFO - Successfully generated scripts for link 29
+🔵 Generating scripts for link 29
+✅ Found link: Youtube - https://www.youtube.com/@Jtxcode
+✅ Found user: jtxcode
+📋 Using cached content for link 29
+✍️ Generating 3 script variations for link 29
+✅ Scripts generated successfully
+✅ Scripts saved to database
+✅ Returning 3 scripts
+INFO:     127.0.0.1:63738 - "POST /api/links/29/generate-scripts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63751 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+2025-11-03 11:01:57,171 - app - INFO - Script selected for link 29: 250 characters
+INFO:     127.0.0.1:63751 - "POST /api/links/29/select-script HTTP/1.1" 200 OK
+2025-11-03 11:01:57,178 - app - INFO - Generating audio for link 29 with voice Iyt2cLJMX7xVv3EPhpOf
+2025-11-03 11:01:57,216 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.elevenlabs.io:443
+2025-11-03 11:02:00,186 - urllib3.connectionpool - DEBUG - https://api.elevenlabs.io:443 "POST /v1/text-to-speech/Iyt2cLJMX7xVv3EPhpOf HTTP/1.1" 200 None
+2025-11-03 11:02:00,286 - app - INFO - Audio generated successfully for link 29: link_29_1762185717.179799.mp3
+✓ Audio generated successfully: /Users/gregbessoni/ai-code-platform/voicetree/backend/audio/link_voices/link_29_1762185717.179799.mp3
+INFO:     127.0.0.1:63751 - "POST /api/links/29/generate-audio HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63751 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63751 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63751 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63757 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63757 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63757 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63760 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63757 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63760 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63760 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63757 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63757 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63770 - "GET /preview/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63770 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63777 - "PUT /api/users/jtxcode/publish HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63777 - "GET /jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63777 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63783 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63781 - "POST /api/track/voice-play/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63786 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63786 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63792 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63792 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63794 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63792 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63796 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63796 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63796 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63796 - "GET /api/admin/jtxcode/clicks-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63796 - "GET /jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63800 - "POST /api/track/voice-play/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63800 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63802 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63807 - "POST /api/clicks/jtxcode/29 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63818 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63818 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63824 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63824 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'database.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [36146]
+/Users/gregbessoni/ai-code-platform/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2025-11-03 11:07:10,516 - script_writer - INFO - Using OpenAI for script generation
+INFO:     Started server process [38688]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✅ ElevenLabs API key loaded: sk_154f813...
+============================================================
+🚀 Selfie.fm Server Started
+============================================================
+✅ Anthropic key: Found
+✅ ElevenLabs key: Found
+📍 Running on: http://localhost:8000
+============================================================
+INFO:     127.0.0.1:53321 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53331 - "GET /images/logo.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53700 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53700 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53700 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53700 - "GET /uploads/avatars/jtxcode_avatar_1762031905.766142.webp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53713 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53700 - "GET /api/admin/jtxcode/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53717 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53700 - "GET /audio/voice_samples/jtxcode_sample_1762177399.343612.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53713 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53719 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53717 - "GET /api/admin/jtxcode/views-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53713 - "GET /api/admin/jtxcode/clicks-chart HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53731 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53731 - "GET /audio/link_voices/link_27_1762184322.207493.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53733 - "GET /audio/link_voices/link_29_1762185717.179799.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53773 - "GET /preview/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53795 - "GET /audio/voice_samples/jtxcode_sample_1762177399.343612.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53795 - "GET /jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53795 - "POST /api/track/voice-play/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53795 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53837 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53844 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+2025-11-03 15:14:52,832 - app - INFO - Starting script generation for link 28: https://x.com/jtxcodex
+2025-11-03 15:14:52,832 - app - INFO - Using cached content for link 28
+2025-11-03 15:14:52,833 - app - INFO - Generating 3 script variations for link 28
+2025-11-03 15:14:52,833 - script_writer - INFO - Generating multiple scripts with OpenAI
+2025-11-03 15:14:52,956 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.openai.com:443
+2025-11-03 15:14:56,752 - urllib3.connectionpool - DEBUG - https://api.openai.com:443 "POST /v1/chat/completions HTTP/1.1" 200 None
+2025-11-03 15:14:56,759 - script_writer - INFO - Generated scripts response: SCRIPT 1:  
+Tired of the daily grind? Imagine waking up free to pursue your passions. My job bot helped me escape the 9-to-5, earning over $400 in no time. You deserve this transformation too. Ready t...
+2025-11-03 15:14:56,763 - script_writer - INFO - Parsed 3 scripts successfully
+2025-11-03 15:14:56,765 - app - INFO - Successfully generated scripts for link 28
+🔵 Generating scripts for link 28
+✅ Found link: x.com - https://x.com/jtxcodex
+✅ Found user: jtxcode
+📋 Using cached content for link 28
+✍️ Generating 3 script variations for link 28
+✅ Scripts generated successfully
+✅ Scripts saved to database
+✅ Returning 3 scripts
+INFO:     127.0.0.1:53844 - "POST /api/links/28/generate-scripts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53859 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+2025-11-03 15:15:03,756 - app - INFO - Script selected for link 28: 231 characters
+INFO:     127.0.0.1:53859 - "POST /api/links/28/select-script HTTP/1.1" 200 OK
+2025-11-03 15:15:03,791 - app - INFO - Generating audio for link 28 with voice Iyt2cLJMX7xVv3EPhpOf
+2025-11-03 15:15:03,826 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.elevenlabs.io:443
+2025-11-03 15:15:07,274 - urllib3.connectionpool - DEBUG - https://api.elevenlabs.io:443 "POST /v1/text-to-speech/Iyt2cLJMX7xVv3EPhpOf HTTP/1.1" 200 None
+2025-11-03 15:15:07,401 - app - INFO - Audio generated successfully for link 28: link_28_1762200903.792106.mp3
+✓ Audio generated successfully: /Users/gregbessoni/ai-code-platform/voicetree/backend/audio/link_voices/link_28_1762200903.792106.mp3
+INFO:     127.0.0.1:53859 - "POST /api/links/28/generate-audio HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53859 - "GET /audio/link_voices/link_28_1762200903.792106.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53877 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53877 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53877 - "GET /audio/link_voices/link_28_1762200903.792106.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53877 - "GET /dashboard/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53880 - "GET /api/voice/check-clone/jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53877 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53880 - "GET /api/users/jtxcode/links HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53883 - "GET /audio/link_voices/link_28_1762200903.792106.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53885 - "GET /audio/link_voices/link_28_1762200903.792106.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53885 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53921 - "GET /jtxcode HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53921 - "GET /audio/link_voices/link_28_1762200903.792106.mp3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53956 - "GET /favicon.ico HTTP/1.1" 404 Not Found
