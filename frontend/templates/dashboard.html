@@ -2248,13 +2248,13 @@
             
             const wordCount = customText.split(/\s+/).filter(word => word.length > 0).length;
             
-            if (wordCount < 30) {
-                showAlert('link-alert', 'Your script is too short. Aim for 50-70 words for a 10-second read.', 'error');
+            if (wordCount < 40) {
+                showAlert('link-alert', 'Your script is too short. Aim for 50-70 words (minimum 40) for a 10-second read.', 'error');
                 return;
             }
             
-            if (wordCount > 90) {
-                showAlert('link-alert', 'Your script is too long. Aim for 50-70 words for a 10-second read.', 'error');
+            if (wordCount > 80) {
+                showAlert('link-alert', 'Your script is too long. Aim for 50-70 words (maximum 80) for a 10-second read.', 'error');
                 return;
             }
             
@@ -3018,13 +3018,13 @@
             
             const wordCount = customScript.split(/\s+/).filter(word => word.length > 0).length;
             
-            if (wordCount < 30) {
-                alert('Your script is too short. Aim for 50-70 words for a 10-second read.');
+            if (wordCount < 40) {
+                alert('Your script is too short. Aim for 50-70 words (minimum 40) for a 10-second read.');
                 return;
             }
             
-            if (wordCount > 90) {
-                alert('Your script is too long. Aim for 50-70 words for a 10-second read.');
+            if (wordCount > 80) {
+                alert('Your script is too long. Aim for 50-70 words (maximum 80) for a 10-second read.');
                 return;
             }
             
