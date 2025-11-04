@@ -1,0 +1,45 @@
+# VoiceTree Requirements
+# GitHub Issue #1: Build VoiceTree MVP - Core Features
+
+# FastAPI framework and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Database
+sqlalchemy==2.0.23
+
+# Request/Response validation
+pydantic==2.5.0
+
+# Template engine
+jinja2==3.1.2
+
+# For file uploads and static files
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# Inworld AI Voice Integration (uses REST API via requests)
+# No separate SDK needed - API key via INWORLD_API_KEY environment variable
+# Get your API key from: https://platform.inworld.ai/
+
+# Web scraping for Linktree import
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# Authentication and security
+bcrypt==4.1.2
+pyjwt==2.8.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+slowapi==0.1.9  # Rate limiting
+
+# AI Script Generation (choose one or both)
+anthropic==0.18.1  # Claude AI for script generation
+openai==1.12.0  # OpenAI GPT for script generation (alternative)
+
+# Voice Cloning and Audio Generation
+elevenlabs==0.2.27  # ElevenLabs API for voice cloning and TTS
+
+# Environment variables and production dependencies
+python-dotenv==1.0.0  # Load environment variables from .env file
+psycopg2-binary==2.9.9  # PostgreSQL adapter for production database
