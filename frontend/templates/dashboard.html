@@ -2049,11 +2049,29 @@
         
         async function editLink(linkId) {
             try {
+                console.log('🔵 editLink() called for linkId:', linkId);
                 const response = await fetch(`/api/users/${username}/links`);
-                const links = await response.json();
+                
+                if (!response.ok) {
+                    console.error('Failed to load links:', response.status);
+                    alert('Failed to load link data. Please try again.');
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('📦 Links data received:', data);
+                
+                // Ensure data is an array
+                const links = Array.isArray(data) ? data : (data.links || []);
+                console.log('📋 Links array:', links.length, 'links');
+                
                 const link = links.find(l => l.id === linkId);
                 
-                if (!link) return;
+                if (!link) {
+                    console.error('Link not found:', linkId);
+                    alert('Link not found');
+                    return;
+                }
                 
                 currentLinkId = linkId;
                 document.getElementById('link-modal-title').textContent = 'Edit Link';
@@ -2067,6 +2085,7 @@
                 document.getElementById('link-alert').innerHTML = '';
             } catch (error) {
                 console.error('Error loading link:', error);
+                alert('Error loading link: ' + error.message);
             }
         }
         
@@ -2603,19 +2622,38 @@
         async function regenerateVoiceForLink(linkId) {
             console.log(`🔄 Regenerating voice for link ${linkId}`);
             
-            // Close the edit modal first
-            closeModal('link-modal');
-            
-            // Launch wizard for this link
             try {
+                console.log('📡 Fetching links from API...');
                 const response = await fetch(`/api/users/${username}/links`);
-                const links = await response.json();
+                
+                if (!response.ok) {
+                    console.error('❌ Failed to load links:', response.status);
+                    alert(`Failed to load links (HTTP ${response.status}). Please try again.`);
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('📦 Links data received:', data);
+                
+                // Ensure data is an array - handle both direct array and wrapped format
+                const links = Array.isArray(data) ? data : (data.links || []);
+                console.log('📋 Links array:', links.length, 'links');
+                
+                if (!Array.isArray(links) || links.length === 0) {
+                    console.error('❌ No links found or invalid format');
+                    alert('No links found. Please add links first.');
+                    return;
+                }
+                
                 const link = links.find(l => l.id == linkId);
                 
                 if (!link) {
-                    alert('Link not found');
+                    console.error('❌ Link not found with ID:', linkId);
+                    alert('Link not found. It may have been deleted.');
                     return;
                 }
+                
+                console.log('✅ Found link:', link.title);
                 
                 // Set wizard to single-link mode
                 wizardLinks = [link];
@@ -2629,7 +2667,7 @@
                 
                 console.log(`✅ Regeneration wizard opened for ${link.title}`);
             } catch (error) {
-                console.error('Error starting regeneration:', error);
+                console.error('❌ Error starting regeneration:', error);
                 alert('Error starting regeneration: ' + error.message);
             }
         }
